@@ -1,0 +1,38 @@
+/* folio.css */
+
+.folio {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.profile-img {
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.bio {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem auto;
+  max-width: 600px;
+  color: #555;
+}
+
+.skills {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.skills li {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  margin: 0.3rem;
+  font-size: 0.9rem;
+}

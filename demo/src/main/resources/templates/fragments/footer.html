@@ -1,0 +1,9 @@
+<footer class="site-footer" th:fragment="footer">
+  <div class="container footer-inner">
+    <p>© <span id="year" th:text="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy')}"></span> My Portfolio. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">이용약관</a></li>
+      <li><a href="#">개인정보처리방침</a></li>
+    </ul>
+  </div>
+</footer>

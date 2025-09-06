@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${folio.name} + ' - About Me'">About Me</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  <link rel="stylesheet" th:href="@{/css/header.css}"/>
+  <link rel="stylesheet" th:href="@{/css/folio.css}"/>
+</head>
+<body data-page="folio">
+
+  <!-- 공통 헤더 -->
+  <th:block th:replace="~{fragments/header :: header}"></th:block>
+
+  <main id="content">
+    <section class="folio container">
+      <h1>About Me</h1>
+
+      <!-- 프로필 이미지 -->
+      <div class="profile">
+        <img th:src="${folio.profileImg}" th:alt="${folio.name}" class="profile-img"/>
+      </div>
+
+      <!-- 이름 -->
+      <h2 th:text="${folio.name}">이름</h2>
+
+      <!-- 자기소개 -->
+      <p class="bio" th:text="${folio.bio}">자기소개</p>
+
+      <!-- 기술 스택 -->
+      <h3>Skills</h3>
+      <ul class="skills">
+        <li th:each="skill : ${#strings.split(folio.skills, ',')}" 
+            th:text="${skill}">Java</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- 공통 푸터 -->
+  <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>
