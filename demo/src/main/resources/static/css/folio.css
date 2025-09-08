@@ -1,38 +1,60 @@
-/* folio.css */
-
-.folio {
+.folio-wrap {
+  margin: 3rem auto;
+  max-width: 800px;
   text-align: center;
-  padding: 2rem 0;
+}
+
+.folio-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.folio-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .profile-img {
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  width: 180px;
-  height: 180px;
   object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid #eee;
+}
+
+.folio-name {
+  font-size: 1.8rem;
   margin-bottom: 1rem;
 }
 
-.bio {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 1rem auto;
-  max-width: 600px;
+.folio-bio {
+  font-size: 1.1rem;
   color: #555;
+  margin-bottom: 2rem;
 }
 
-.skills {
+.folio-skill-title {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.folio-skills {
   list-style: none;
   padding: 0;
-  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.skills li {
-  display: inline-block;
-  background: #e0e7ff;
-  color: #3730a3;
+.skill-tag {
+  background: #f3f4f6;
   border-radius: 6px;
   padding: 0.4rem 0.8rem;
-  margin: 0.3rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  color: #333;
 }

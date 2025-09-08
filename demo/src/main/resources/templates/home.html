@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title>My Portfolio - Home</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  <link rel="stylesheet" th:href="@{/css/home.css}"/>
   <link rel="stylesheet" th:href="@{/css/header.css}"/>
 </head>
 <body data-page="home">
@@ -11,40 +11,43 @@
   <!-- 공통 헤더 -->
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <main id="content">
-    <section class="hero">
-      <div class="container hero-inner">
-        <h1>나의 프로젝트</h1>
-        <p class="hero-sub">제가 진행한 프로젝트들을 소개합니다.</p>
-      </div>
-    </section>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>나의 프로젝트</h1>
+      <p class="hero-sub">제가 진행한 프로젝트들을 소개합니다.</p>
+    </div>
 
-    <!-- 프로젝트 목록 -->
-    <section class="container grid-wrap">
-      <div class="grid">
-        <div th:each="project : ${projects}" class="card">
-          <figure class="card-media">
-            <img th:src="${project.coverUrl}" th:alt="${project.title}"/>
-          </figure>
-          <div class="card-body">
-            <h3 class="card-title" th:text="${project.title}"></h3>
-            <p class="card-meta">
-              <span th:text="${project.creator}"></span> •
-              <span th:text="${#temporals.format(project.createdAt, 'yyyy-MM-dd')}"></span> •
-              ❤ <span th:text="${project.likes}"></span>
-            </p>
-            <p class="card-desc" th:text="${project.description}"></p>
-          </div>
-          <div class="card-actions">
-            <a th:href="@{/projects/{id}(id=${project.id})}" class="btn view">자세히</a>
-            <a th:href="${project.link}" class="btn ghost" target="_blank">원본</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+    <!-- 검색/정렬 툴바 -->
+    <div class="container toolbar">
+  <div class="toolbar-inner">
+    <input id="searchInput" type="text" placeholder="검색어 입력..." />
+    <select id="sortSelect">
+      <option value="latest" selected>최신순</option>
+      <option value="popular">인기순</option>
+      <option value="title">제목순</option>
+    </select>
+    <button id="btnClear" class="btn ghost">초기화</button>
+  </div>
+</div>
+
+  <!-- 프로젝트 목록 -->
+  <section id="section-projects" class="container grid-wrap">
+    <div id="grid" class="grid" aria-busy="false">
+      <!-- ✅ home.js의 fetch → 카드 자동 렌더링 -->
+    </div>
+    <div class="actions">
+      <button id="btnLoadMore" class="btn primary">더보기</button>
+    </div>
+  </section>
+
+  <!-- 위로가기 버튼 -->
+  <button id="btnToTop" class="fab hidden" aria-label="맨 위로">↑</button>
 
   <!-- 공통 푸터 -->
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+  <!-- JS -->
+  <script th:src="@{/js/home.js}"></script>
 </body>
 </html>

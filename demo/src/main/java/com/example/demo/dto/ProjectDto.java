@@ -1,13 +1,11 @@
 package com.example.demo.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,6 +17,9 @@ public class ProjectDto {
     private String coverUrl;
     private String link;
     private int likes;
-    private List<String> tags;
     private LocalDate createdAt;
+    private List<String> tags;
+
+    // ✅ 상세 정보 리스트
+    private List<ProjectDetailDto> details;
 }

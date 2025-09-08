@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Controller
@@ -36,6 +36,11 @@ public class ViewController {
     public String folio(@PathVariable Long id, Model model) {
         model.addAttribute("folio", folioService.getFolio(id));
         return "folio";
+    }
+    
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
     }
     
     

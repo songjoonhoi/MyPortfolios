@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Project {
     @Column(nullable = false, length = 50)
     private String creator; // 만든 사람
 
-    @Lob
+    @Column(length = 1000)
     private String description; // 설명
 
     private String coverUrl; // 대표 이미지 url
@@ -33,9 +34,14 @@ public class Project {
 
     private int likes;     // 좋아요 수
 
-    @ElementCollection // 별도 테이블로 저장됨
-    private List<String> tags; // 태그들
-
     private LocalDate createdAt; // 생성 날짜
-    
+
+    @ElementCollection
+    @CollectionTable(name = "project_tags", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "tags")
+    private List<String> tags = new ArrayList<>();
+
+    // ✅ 상세 이미지/정보
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectDetail> details = new ArrayList<>();
 }

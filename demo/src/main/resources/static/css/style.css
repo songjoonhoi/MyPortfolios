@@ -1,6 +1,8 @@
 /* styles.css */
 
-/* 기본 레이아웃 */
+/* ========================
+   기본 레이아웃
+======================== */
 body {
   font-family: 'Noto Sans KR', sans-serif;
   margin: 0;
@@ -15,7 +17,9 @@ body {
   margin: 0 auto;
 }
 
-/* Hero */
+/* ========================
+   Hero
+======================== */
 .hero {
   padding: 3rem 0;
   text-align: center;
@@ -30,9 +34,77 @@ body {
 .hero-sub {
   color: #666;
   font-size: 1.1rem;
+  margin-bottom: 1.5rem;
 }
 
-/* 카드 그리드 */
+/* 검색 폼 */
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-form input {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 250px;
+  font-size: 0.95rem;
+}
+
+/* 태그 버튼 */
+.tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tags .tag {
+  background: #eef2ff;
+  color: #4338ca;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.tags .tag:hover {
+  background: #e0e7ff;
+}
+
+/* ========================
+   Toolbar
+======================== */
+.toolbar {
+  margin: 1.5rem auto;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+
+.toolbar .search-input {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 200px;
+  font-size: 0.9rem;
+}
+
+.toolbar .sort-select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* ========================
+   카드 그리드
+======================== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -40,78 +112,108 @@ body {
   margin-top: 2rem;
 }
 
-.card {
-  background: #fff;
+/* fancy-card */
+.fancy-card {
   border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: #fff;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card:hover {
+.fancy-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-.card-media img {
+/* 카드 이미지 */
+.fancy-card .card-media {
+  height: 180px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+.fancy-card .card-media img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.card-body {
-  padding: 1rem;
+/* 카드 본문 */
+.fancy-card .card-body {
+  padding: 1.2rem;
 }
 
-.card-title {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: bold;
+.fancy-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
 }
 
-.card-meta {
-  font-size: 0.9rem;
-  color: #888;
-  margin: 0.5rem 0;
+.fancy-card .card-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.8rem;
 }
 
-.card-desc {
+.fancy-card .card-desc {
   font-size: 0.95rem;
   color: #555;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-.card-actions {
-  padding: 1rem;
+/* 카드 하단 버튼 */
+.fancy-card .card-actions {
+  padding: 1rem 1.2rem;
   display: flex;
-  justify-content: space-between;
   gap: 0.5rem;
 }
 
-/* 버튼 */
+/* ========================
+   버튼
+======================== */
 .btn {
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   text-align: center;
-  transition: background 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn.view {
-  background: #4f46e5;
+  background: #3b82f6;
   color: #fff;
 }
 
 .btn.view:hover {
-  background: #4338ca;
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .btn.ghost {
   border: 1px solid #ccc;
   color: #333;
+  background: transparent;
 }
 
 .btn.ghost:hover {
-  background: #f0f0f0;
+  background: #f9f9f9;
+}
+
+/* ========================
+   Grid Footer (더보기/위로)
+======================== */
+.grid-footer {
+  margin: 2rem auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }

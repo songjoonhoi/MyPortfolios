@@ -48,3 +48,22 @@ INSERT INTO project_tags (project_id, tags) VALUES (2, 'JPA');
 INSERT INTO project_tags (project_id, tags) VALUES (3, 'Spring Boot');
 INSERT INTO project_tags (project_id, tags) VALUES (3, 'REST API');
 INSERT INTO project_tags (project_id, tags) VALUES (3, 'i18n');
+
+-- 프로젝트 1 상세
+INSERT INTO project_details (project_id, title, description, image_url)
+VALUES (1, '포트폴리오 화면', '메인 페이지 UI 스크린샷', 'https://picsum.photos/seed/portfolio1/800/600');
+
+INSERT INTO project_details (project_id, title, description, image_url)
+VALUES (1, '포트폴리오 소개', 'About 섹션 구성 화면', 'https://picsum.photos/seed/portfolio2/800/600');
+
+INSERT INTO project_details (project_id, title, description, image_url)
+VALUES (1, '포트폴리오 기능', '프로젝트 목록 페이지', 'https://picsum.photos/seed/portfolio3/800/600');
+
+-- 프로젝트 2 상세
+INSERT INTO project_details (project_id, title, description, image_url)
+VALUES (2, '상품 목록', 'React 기반 쇼핑몰 상품 리스트', 'https://picsum.photos/seed/shop1/800/600');
+
+INSERT INTO project_details (project_id, title, description, image_url)
+VALUES (2, '장바구니', '장바구니 기능 구현 화면', 'https://picsum.photos/seed/shop2/800/600');
+
+

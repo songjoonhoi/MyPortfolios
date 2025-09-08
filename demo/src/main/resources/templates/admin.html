@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - 프로젝트 등록</title>
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+
+</head>
+<body>
+  <main class="admin-container">
+    <h1>프로젝트 등록</h1>
+    <form id="projectForm">
+      <!-- 대표 프로젝트 정보 -->
+      <fieldset>
+        <legend>대표 프로젝트 정보</legend>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" required />
+
+        <label for="creator">작성자</label>
+        <input type="text" id="creator" name="creator" required />
+
+        <label for="description">설명</label>
+        <textarea id="description" name="description" required></textarea>
+
+        <label for="link">링크</label>
+        <input type="url" id="link" name="link" />
+
+        <label for="tags">태그 (쉼표로 구분)</label>
+        <input type="text" id="tags" name="tags" placeholder="예: Spring Boot, AWS, JPA" />
+
+        <label for="coverFile">대표 이미지</label>
+        <input type="file" id="coverFile" accept="image/*" />
+        <img id="preview" class="preview-img" style="display:none;" />
+      </fieldset>
+
+      <hr/>
+
+      <!-- 상세 프로젝트(갤러리) 정보 -->
+      <fieldset>
+        <legend>상세 갤러리</legend>
+        <div id="detailsContainer"></div>
+        <button type="button" id="addDetailBtn" class="btn-add">+ 상세 항목 추가</button>
+      </fieldset>
+
+      <hr/>
+      <button type="submit" class="btn-submit">등록</button>
+    </form>
+  </main>
+
+  <script th:src="@{/js/admin.js}"></script>
+</body>
+</html>
