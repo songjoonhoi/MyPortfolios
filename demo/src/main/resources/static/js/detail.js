@@ -1,5 +1,5 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+const $ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 const state = {
   page: 0,
@@ -10,7 +10,6 @@ const state = {
   currentIndex: 0
 };
 
-// --- API 호출 ---
 async function fetchProject(id) {
   try {
     const res = await fetch(`/api/portfolios/${id}`);
@@ -30,7 +29,7 @@ async function fetchOtherProjects() {
     if (!res.ok) throw new Error('다른 프로젝트 목록을 불러오는데 실패했습니다.');
     const pageData = await res.json();
     state.isLastPage = pageData.last;
-    return pageData.content; // 실제 프로젝트 데이터 배열 반환
+    return pageData.content;
   } catch (error) {
     console.error(error);
     return null;
@@ -39,21 +38,37 @@ async function fetchOtherProjects() {
   }
 }
 
-// --- 화면 렌더링 ---
 function renderDetail(p) {
   if (!p) {
-    document.querySelector('.detailband').innerHTML = '<p class="note">프로젝트를 찾을 수 없습니다.</p>';
+    const detailband = document.querySelector('.detailband');
+    if (detailband) {
+      detailband.innerHTML = '<p class="note">프로젝트를 찾을 수 없습니다.</p>';
+    }
     return;
   }
-  $("#detailTitle").textContent = p.title;
-  $("#detailProjectTitle").textContent = p.title;
-  $("#detailDesc").textContent = p.description;
-  $("#detailCover").src = p.coverUrl || '';
-  $("#detailCreator").textContent = `by ${p.creator}`;
-  $("#detailDate").textContent = new Date(p.createdAt).toLocaleDateString('ko-KR');
-  $("#detailLikes").textContent = `❤ ${p.likes}`;
-  $("#detailTags").innerHTML = (p.tags || []).map(t => `<span class="tech" data-tech="${t}">${t}</span>`).join("");
-  $("#detailLink").href = p.link;
+  
+  const elements = {
+    detailTitle: $("#detailTitle"),
+    detailProjectTitle: $("#detailProjectTitle"),
+    detailDesc: $("#detailDesc"),
+    detailCover: $("#detailCover"),
+    detailCreator: $("#detailCreator"),
+    detailDate: $("#detailDate"),
+    detailLikes: $("#detailLikes"),
+    detailTags: $("#detailTags"),
+    detailLink: $("#detailLink")
+  };
+  
+  if (elements.detailTitle) elements.detailTitle.textContent = p.title;
+  if (elements.detailProjectTitle) elements.detailProjectTitle.textContent = p.title;
+  if (elements.detailDesc) elements.detailDesc.textContent = p.description;
+  if (elements.detailCover) elements.detailCover.src = p.coverUrl || '';
+  if (elements.detailCreator) elements.detailCreator.textContent = `by ${p.creator}`;
+  if (elements.detailDate) elements.detailDate.textContent = new Date(p.createdAt).toLocaleDateString('ko-KR');
+  if (elements.detailLikes) elements.detailLikes.textContent = `❤ ${p.likes}`;
+  if (elements.detailTags) elements.detailTags.innerHTML = (p.tags || []).map(t => `<span class="tech" data-tech="${t}">${t}</span>`).join("");
+  if (elements.detailLink) elements.detailLink.href = p.link || '#';
+  
   renderGallery(p.details || []);
 }
 
@@ -79,6 +94,8 @@ function createCard(project) {
 
 async function renderOtherProjectsGrid() {
   const grid = $("#grid");
+  if (!grid) return;
+  
   if (state.page === 0) grid.innerHTML = "";
   const projects = await fetchOtherProjects();
   if (projects && projects.length > 0) {
@@ -89,27 +106,126 @@ async function renderOtherProjectsGrid() {
       }
     });
   }
-  $("#btnLoadMore").classList.toggle("hidden", state.isLastPage);
+  
+  const btnLoadMore = $("#btnLoadMore");
+  if (btnLoadMore) {
+    btnLoadMore.classList.toggle("hidden", state.isLastPage);
+  }
 }
 
-function renderGallery(details) { /* 내용은 이전과 동일하므로 생략 */ }
-function openModal(index) { /* 내용은 이전과 동일하므로 생략 */ }
-function closeModal() { /* 내용은 이전과 동일하므로 생략 */ }
-function showPrev() { /* 내용은 이전과 동일하므로 생략 */ }
-function showNext() { /* 내용은 이전과 동일하므로 생략 */ }
-function attachLikeHandler(projectId) { /* 내용은 이전과 동일하므로 생략 */ }
-function attachTagHandlers() { /* 내용은 이전과 동일하므로 생략 */ }
+function renderGallery(details) {
+  const grid = $("#galleryGrid");
+  if (!grid) return;
+  
+  if (!details || details.length === 0) {
+    grid.innerHTML = '<p class="note" style="grid-column: 1/-1; text-align: center; padding: 2rem;">등록된 상세 이미지가 없습니다.</p>';
+    return;
+  }
+  
+  state.gallery = details;
+  grid.innerHTML = "";
+  
+  details.forEach((detail, index) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.cursor = "pointer";
+    
+    const placeholder = `data:image/svg+xml;base64,${btoa(`
+      <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#365cff"/>
+        <text x="50%" y="50%" font-family="Arial" font-size="16" fill="#fff" text-anchor="middle" dy=".3em">No Image</text>
+      </svg>
+    `)}`;
+    
+    card.innerHTML = `
+      <figure class="card-media">
+        <img src="${detail.imageUrl || placeholder}" 
+             alt="${detail.title || '상세 이미지'}"
+             onerror="this.src='${placeholder}'; this.onerror=null;" />
+      </figure>
+      <div class="card-body">
+        <h3 class="card-title">${detail.title || '제목 없음'}</h3>
+        <p class="card-desc">${detail.description || '설명 없음'}</p>
+      </div>
+    `;
+    
+    card.addEventListener("click", () => openModal(index));
+    grid.appendChild(card);
+  });
+}
 
-// --- 초기화 ---
+function openModal(index) {
+  if (!state.gallery || state.gallery.length === 0) return;
+  
+  state.currentIndex = index;
+  const detail = state.gallery[index];
+  const modal = $("#imageModal");
+  const modalImage = $("#modalImage");
+  
+  if (!modal || !modalImage) return;
+  
+  modalImage.src = detail.imageUrl || '';
+  modalImage.alt = detail.title || '상세 이미지';
+  modal.showModal();
+  
+  const prevBtn = $("#modalPrev");
+  const nextBtn = $("#modalNext");
+  if (prevBtn) prevBtn.style.display = state.gallery.length > 1 ? "block" : "none";
+  if (nextBtn) nextBtn.style.display = state.gallery.length > 1 ? "block" : "none";
+}
+
+function closeModal() {
+  const modal = $("#imageModal");
+  if (modal) modal.close();
+}
+
+function showPrev() {
+  if (state.gallery && state.gallery.length > 1) {
+    state.currentIndex = (state.currentIndex - 1 + state.gallery.length) % state.gallery.length;
+    openModal(state.currentIndex);
+  }
+}
+
+function showNext() {
+  if (state.gallery && state.gallery.length > 1) {
+    state.currentIndex = (state.currentIndex + 1) % state.gallery.length;
+    openModal(state.currentIndex);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const projectId = location.pathname.split("/").pop();
   const project = await fetchProject(projectId);
   renderDetail(project);
   renderOtherProjectsGrid();
-  attachLikeHandler(projectId);
-  attachTagHandlers();
-  $("#btnLoadMore").addEventListener("click", () => { 
-    state.page++; 
-    renderOtherProjectsGrid(); 
+  
+  const btnLoadMore = $("#btnLoadMore");
+  if (btnLoadMore) {
+    btnLoadMore.addEventListener("click", () => { 
+      state.page++; 
+      renderOtherProjectsGrid(); 
+    });
+  }
+  
+  // 모달 이벤트
+  const modalClose = $("#modalClose");
+  const modalPrev = $("#modalPrev");
+  const modalNext = $("#modalNext");
+  const imageModal = $("#imageModal");
+  
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (modalPrev) modalPrev.addEventListener("click", showPrev);
+  if (modalNext) modalNext.addEventListener("click", showNext);
+  
+  if (imageModal) {
+    imageModal.addEventListener("click", (e) => {
+      if (e.target === imageModal) closeModal();
+    });
+  }
+  
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+    if (e.key === "ArrowLeft") showPrev();
+    if (e.key === "ArrowRight") showNext();
   });
 });

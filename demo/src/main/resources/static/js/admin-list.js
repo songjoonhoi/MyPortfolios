@@ -1,13 +1,11 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 
-// 상태 관리
 const state = {
   loading: false,
   projects: [],
   error: null
 };
 
-// 기본 placeholder 이미지 생성
 function createPlaceholderImage(text = 'No Image', color = '#365cff') {
   return `data:image/svg+xml;base64,${btoa(`
     <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -17,21 +15,19 @@ function createPlaceholderImage(text = 'No Image', color = '#365cff') {
   `)}`;
 }
 
-// ===== ✅ API 호출 함수를 페이징에 맞게 수정 =====
 async function fetchAllProjects() {
   try {
     state.loading = true;
     showLoading();
     
-    // 페이지네이션 API를 사용하되, size를 매우 크게 설정하여 모든 데이터를 한 번에 가져옴
-    const res = await fetch("/api/portfolios?page=0&size=200"); // 200개까지 가져오기
+    const res = await fetch("/api/portfolios?page=0&size=200");
     
     if (!res.ok) {
       throw new Error(`서버 오류: ${res.status} ${res.statusText}`);
     }
     
-    const pageData = await res.json(); // Page 객체 수신
-    state.projects = pageData.content; // ✅ 실제 데이터는 .content 배열에 있음
+    const pageData = await res.json();
+    state.projects = pageData.content;
     state.error = null;
     
     return state.projects;
@@ -45,28 +41,30 @@ async function fetchAllProjects() {
   }
 }
 
-// 로딩 상태 표시
 function showLoading() {
   const list = $("#adminList");
-  list.innerHTML = `<div class="loading-container" style="grid-column: 1/-1;"><div class="loading">프로젝트를 불러오는 중입니다...</div></div>`;
+  if (list) {
+    list.innerHTML = `<div class="loading-container" style="grid-column: 1/-1;"><div class="loading">프로젝트를 불러오는 중입니다...</div></div>`;
+  }
 }
 
-// 에러 상태 표시
 function showError(message) {
   const list = $("#adminList");
-  list.innerHTML = `<div class="error-container" style="grid-column: 1/-1;"><div class="error-message"><h3>오류가 발생했습니다</h3><p>${message}</p><button class="btn-retry" onclick="renderAdminList()">다시 시도</button></div></div>`;
+  if (list) {
+    list.innerHTML = `<div class="error-container" style="grid-column: 1/-1;"><div class="error-message"><h3>오류가 발생했습니다</h3><p>${message}</p><button class="btn-retry" onclick="renderAdminList()">다시 시도</button></div></div>`;
+  }
 }
 
-// 빈 상태 표시
 function showEmpty() {
   const list = $("#adminList");
-  list.innerHTML = `<div class="empty-container" style="grid-column: 1/-1;"><div class="note"><h3>등록된 프로젝트가 없습니다</h3><p>새 프로젝트를 등록해보세요!</p></div></div>`;
+  if (list) {
+    list.innerHTML = `<div class="empty-container" style="grid-column: 1/-1;"><div class="note"><h3>등록된 프로젝트가 없습니다</h3><p>새 프로젝트를 등록해보세요!</p></div></div>`;
+  }
 }
 
-// 관리자 카드 생성
 function createAdminCard(project) {
   const el = document.createElement("article");
-  el.className = "card";
+  el.className = "card admin-project-card";
   const formattedDate = project.createdAt ? new Date(project.createdAt).toLocaleDateString('ko-KR') : '날짜 없음';
   const truncatedDesc = project.description && project.description.length > 100 ? project.description.substring(0, 100) + '...' : (project.description || '설명 없음');
   const imageUrl = project.coverUrl || createPlaceholderImage('No Image');
@@ -94,7 +92,6 @@ function createAdminCard(project) {
   return el;
 }
 
-// 프로젝트 삭제 처리
 async function handleDelete(project) {
   if (!confirm(`"${project.title}" 프로젝트를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) return;
   
@@ -105,7 +102,10 @@ async function handleDelete(project) {
       deleteBtn.textContent = "삭제 중...";
     }
     const res = await fetch(`/api/portfolios/${project.id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error(`삭제 실패: ${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `삭제 실패: ${res.status}`);
+    }
     
     alert("프로젝트가 삭제되었습니다!");
     const cardElement = deleteBtn.closest('.card');
@@ -113,7 +113,8 @@ async function handleDelete(project) {
       cardElement.style.opacity = '0';
       setTimeout(() => {
         cardElement.remove();
-        if (!$("#adminList").children.length) showEmpty();
+        const adminList = $("#adminList");
+        if (adminList && !adminList.children.length) showEmpty();
       }, 300);
     }
   } catch (error) {
@@ -126,11 +127,12 @@ async function handleDelete(project) {
   }
 }
 
-// ===== ✅ 관리자 목록 렌더링 함수 수정 =====
 async function renderAdminList() {
   const list = $("#adminList");
+  if (!list) return;
+  
   try {
-    const projects = await fetchAllProjects(); // 수정된 함수 호출
+    const projects = await fetchAllProjects();
     list.innerHTML = "";
     if (!projects || projects.length === 0) {
       showEmpty();
@@ -146,5 +148,4 @@ async function renderAdminList() {
   }
 }
 
-// --- 초기화 ---
 document.addEventListener("DOMContentLoaded", renderAdminList);

@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8"/>
   <title>My Portfolio - Detail</title>
-  <link rel="stylesheet" th:href="@{/css/home.css}"/>
-  <link rel="stylesheet" th:href="@{/css/header.css}"/>
-  <link rel="stylesheet" th:href="@{/css/detail.css}"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body data-page="detail">
 
-  <!-- 공통 헤더 -->
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <!-- Hero Section -->
   <section class="hero hero--slim">
     <div class="container hero-inner">
       <h1 id="detailTitle">프로젝트 상세</h1>
@@ -20,7 +16,6 @@
     </div>
   </section>
 
-  <!-- 상세 정보 -->
   <section class="container detailband">
     <div class="detailband-inner">
       <figure class="detail-cover">
@@ -42,13 +37,11 @@
     </div>
   </section>
 
-  <!-- 프로젝트 갤러리 -->
   <section class="container detail-gallery">
     <h3>프로젝트 갤러리</h3>
     <div id="galleryGrid" class="grid"></div>
   </section>
 
-  <!-- 📌 갤러리 모달 -->
   <dialog id="imageModal" class="image-modal">
     <button id="modalClose" class="modal-close">&times;</button>
     <button id="modalPrev" class="modal-nav prev">&#10094;</button>
@@ -56,22 +49,18 @@
     <button id="modalNext" class="modal-nav next">&#10095;</button>
   </dialog>
 
-  <!-- 관련 프로젝트 -->
   <section id="section-projects" class="container grid-wrap">
     <h3>다른 프로젝트도 보기</h3>
     <div id="grid" class="grid" aria-busy="false"></div>
     <div class="actions">
-      <button id="btnLoadMore" class="btn view">더보기</button>
+      <button id="btnLoadMore" class="btn primary">더보기</button>
     </div>
   </section>
 
-  <!-- 위로가기 버튼 -->
-  <button id="btnToTop" class="btn fab hidden" aria-label="맨 위로">↑</button>
+  <button id="btnToTop" class="fab hidden" aria-label="맨 위로">↑</button>
 
-  <!-- 공통 푸터 -->
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
-  <!-- JS -->
   <script th:src="@{/js/detail.js}"></script>
 </body>
 </html>

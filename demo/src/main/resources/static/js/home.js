@@ -1,14 +1,13 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+const $ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 const state = {
-  // data: [], // 전체 데이터를 저장할 필요가 없어짐
   query: "",
   sort: "latest",
-  page: 0, // ✅ 페이지 번호는 0부터 시작
+  page: 0,
   pageSize: 9,
-  isLastPage: false, // ✅ 마지막 페이지인지 확인하는 변수 추가
-  isLoading: false,  // ✅ 중복 요청 방지를 위한 변수 추가
+  isLastPage: false,
+  isLoading: false,
 };
 
 // 날짜 포맷
@@ -34,7 +33,7 @@ function renderTagBadges(tags){
   return html + (hidden > 0 ? `<span class="tag-badge more">+${hidden}</span>` : "");
 }
 
-// 카드 생성 (개선된 이미지 처리)
+// 카드 생성
 function createCard(project){
   const el = document.createElement("article");
   el.className = "card";
@@ -60,18 +59,18 @@ function createCard(project){
     </div>
     <div class="card-actions">
       <a href="/projects/${project.id}" class="btn primary">자세히</a>
-      <a href="${project.link}" class="btn ghost" target="_blank">원본</a>
+      <a href="${project.link || '#'}" class="btn ghost" ${project.link ? 'target="_blank"' : 'onclick="return false;"'}>원본</a>
     </div>
   `;
   return el;
 }
 
-// 그리드 렌더링 함수 (데이터 추가 방식)
+// 그리드 렌더링
 function renderGrid(projects) {
   const grid = $("#grid");
   
   if (state.page === 0) {
-      grid.innerHTML = ""; // 첫 페이지일 때만 그리드를 비움
+    grid.innerHTML = "";
   }
 
   if (projects.length === 0 && state.page === 0) {
@@ -82,14 +81,21 @@ function renderGrid(projects) {
   projects.forEach(p => grid.appendChild(createCard(p)));
 }
 
-// 데이터 fetch 함수 (페이징 방식)
+// 데이터 로드
 async function loadData() {
   if (state.isLastPage || state.isLoading) return; 
 
   state.isLoading = true;
   
   try {
-    const res = await fetch(`/api/portfolios?page=${state.page}&size=${state.pageSize}`);
+    const params = new URLSearchParams({
+      page: state.page,
+      size: state.pageSize,
+      sort: state.sort,
+      search: state.query
+    });
+    
+    const res = await fetch(`/api/portfolios?${params}`);
     if (!res.ok) {
       throw new Error(`서버 오류: ${res.status}`);
     }
@@ -98,7 +104,10 @@ async function loadData() {
     renderGrid(pageData.content);
 
     state.isLastPage = pageData.last;
-    $("#btnLoadMore").classList.toggle("hidden", state.isLastPage);
+    const btnLoadMore = $("#btnLoadMore");
+    if (btnLoadMore) {
+      btnLoadMore.classList.toggle("hidden", state.isLastPage);
+    }
 
   } catch (error) {
     console.error("데이터 로드 오류:", error);
@@ -115,9 +124,69 @@ async function loadData() {
   }
 }
 
+// 검색/정렬 기능
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function handleSearch(e) {
+  state.query = e.target.value.trim();
+  state.page = 0;
+  state.isLastPage = false;
+  loadData();
+}
+
+function handleSort(e) {
+  state.sort = e.target.value;
+  state.page = 0;
+  state.isLastPage = false;
+  loadData();
+}
+
+function handleClear() {
+  state.query = "";
+  state.sort = "latest";
+  state.page = 0;
+  state.isLastPage = false;
+  
+  const searchInput = $("#searchInput");
+  const sortSelect = $("#sortSelect");
+  
+  if (searchInput) searchInput.value = "";
+  if (sortSelect) sortSelect.value = "latest";
+  
+  loadData();
+}
+
+function attachToolbarHandlers() {
+  const searchInput = $("#searchInput");
+  const sortSelect = $("#sortSelect");
+  const btnClear = $("#btnClear");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", debounce(handleSearch, 300));
+  }
+  
+  if (sortSelect) {
+    sortSelect.addEventListener("change", handleSort);
+  }
+  
+  if (btnClear) {
+    btnClear.addEventListener("click", handleClear);
+  }
+}
+
 // 초기화
 function init() {
-  // attachToolbarHandlers(); // 검색/정렬 기능은 나중에 페이징과 연동해야 함
+  attachToolbarHandlers();
   
   const btnLoadMore = $("#btnLoadMore");
   if (btnLoadMore) {
@@ -133,7 +202,7 @@ function init() {
     window.addEventListener("scroll", () => btnToTop.classList.toggle("hidden", window.scrollY < 600));
   }
   
-  loadData(); // 첫 페이지 데이터 로드
+  loadData();
 }
 
 document.addEventListener("DOMContentLoaded", init);

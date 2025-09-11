@@ -3,26 +3,20 @@
 <head>
   <meta charset="UTF-8"/>
   <title>My Portfolio - About</title>
-  <link rel="stylesheet" th:href="@{/css/home.css}"/>
-  <link rel="stylesheet" th:href="@{/css/folio.css}"/>
-  <link rel="stylesheet" th:href="@{/css/header.css}"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body data-page="folio">
 
-  <!-- 공통 헤더 -->
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <!-- 자기소개 섹션 -->
   <main class="container folio-wrap" aria-busy="true">
     <section id="folioDetail" class="folio-card">
-      <!-- ✅ JS(folio.js)에서 데이터 채움 -->
+      <!-- JS에서 데이터 채움 -->
     </section>
   </main>
 
-  <!-- 공통 푸터 -->
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
-  <!-- JS -->
   <script th:src="@{/js/folio.js}"></script>
 </body>
 </html>
