@@ -4,9 +4,12 @@
   <meta charset="UTF-8">
   <title>관리자 - 프로젝트 목록</title>
   <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}"> 
   <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+  <th:block th:replace="~{fragments/header :: header}"></th:block>
+
   <main class="admin-container">
     <h1>관리자 - 프로젝트 목록</h1>
     <div id="adminList" class="grid"></div>
@@ -14,6 +17,8 @@
       <a href="/admin" class="btn-submit">+ 새 프로젝트 등록</a>
     </div>
   </main>
+
+  <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
   <script th:src="@{/js/admin-list.js}"></script>
 </body>

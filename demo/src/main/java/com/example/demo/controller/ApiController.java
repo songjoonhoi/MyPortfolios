@@ -2,15 +2,18 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.FolioDto;
 import com.example.demo.dto.ProjectDto;
+import com.example.demo.entity.Folio;
 import com.example.demo.entity.Project;
 import com.example.demo.service.FolioService;
 import com.example.demo.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import com.example.demo.entity.Folio;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 
 @RestController
@@ -60,5 +63,14 @@ public class ApiController {
     @GetMapping("/folios/{id}")
     public FolioDto getFolio(@PathVariable Long id) {
         return folioService.getFolio(id);
+    }
+
+    // ===== ✅ 개인 소개 등록 및 수정 통합 API =====
+    @PostMapping("/folios") // PUT 대신 POST 사용
+    public ResponseEntity<FolioDto> createOrUpdateFolio(@RequestBody FolioDto dto) {
+        // ID가 1로 고정되도록 DTO를 설정 (자기소개는 항상 1번)
+        dto.setId(1L); 
+        Folio saved = folioService.createOrUpdateFolio(dto);
+        return ResponseEntity.ok(folioService.getFolio(saved.getId()));
     }
 }

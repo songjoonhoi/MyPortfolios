@@ -50,6 +50,12 @@ public class ViewController {
     public String adminList() {
         return "admin-list";
     }
+
+    // 자기소개 관리 페이지
+    @GetMapping("/admin/folio")
+    public String adminFolio() {
+        return "admin-folio";
+    }
     
     
     
