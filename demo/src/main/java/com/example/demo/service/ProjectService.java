@@ -81,10 +81,10 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
-    // DTO → Entity
+    // DTO → Entity (🔥 수정된 부분)
     public Project fromDto(ProjectDto dto) {
         Project p = Project.builder()
-                .id(dto.getId())
+                .id(null) // 🔥 신규 등록 시 id를 null로 설정하여 자동 생성되도록 함
                 .title(dto.getTitle())
                 .creator(dto.getCreator())
                 .description(dto.getDescription())

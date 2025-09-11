@@ -35,6 +35,52 @@ if (projectId) {
     });
 }
 
+// ===== 🔥 대표 이미지 업로드 이벤트 추가 (누락된 부분) =====
+$("#coverFile").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // 파일 유효성 검사
+  if (!file.type.startsWith('image/')) {
+    alert("이미지 파일만 업로드 가능합니다.");
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) { // 10MB 제한
+    alert("파일 크기는 10MB 이하로 업로드해주세요.");
+    return;
+  }
+
+  try {
+    // 미리보기 표시
+    const reader = new FileReader();
+    reader.onload = ev => {
+      $("#preview").src = ev.target.result;
+      $("#preview").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+
+    // 서버에 업로드
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    const res = await fetch("/api/uploads/images", { 
+      method: "POST", 
+      body: formData 
+    });
+    
+    if (res.ok) {
+      uploadedCoverUrl = await res.text();
+      console.log("대표 이미지 업로드 성공:", uploadedCoverUrl);
+    } else {
+      throw new Error("업로드 실패");
+    }
+  } catch (error) {
+    console.error("이미지 업로드 오류:", error);
+    alert("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+  }
+});
+
 // ===== 상세 갤러리 추가 폼 =====
 function addDetailForm(detail={title:"",description:"",imageUrl:""}) {
   const container = document.createElement("div");
@@ -61,22 +107,46 @@ function addDetailForm(detail={title:"",description:"",imageUrl:""}) {
   container.querySelector(".detail-title").addEventListener("input", e=>obj.title=e.target.value);
   container.querySelector(".detail-desc").addEventListener("input", e=>obj.description=e.target.value);
 
-  // 이미지 업로드 이벤트
+  // 이미지 업로드 이벤트 (개선된 버전)
   container.querySelector(".detail-file").addEventListener("change", async (e)=>{
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = ev=>{
-      container.querySelector(".detail-preview").src = ev.target.result;
-      container.querySelector(".detail-preview").style.display = "block";
-    };
-    reader.readAsDataURL(file);
+    // 파일 유효성 검사
+    if (!file.type.startsWith('image/')) {
+      alert("이미지 파일만 업로드 가능합니다.");
+      return;
+    }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("/api/uploads/images", { method:"POST", body:formData });
-    if (res.ok) obj.imageUrl = await res.text();
+    if (file.size > 10 * 1024 * 1024) { // 10MB 제한
+      alert("파일 크기는 10MB 이하로 업로드해주세요.");
+      return;
+    }
+
+    try {
+      // 미리보기 표시
+      const reader = new FileReader();
+      reader.onload = ev=>{
+        container.querySelector(".detail-preview").src = ev.target.result;
+        container.querySelector(".detail-preview").style.display = "block";
+      };
+      reader.readAsDataURL(file);
+
+      // 서버에 업로드
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/uploads/images", { method:"POST", body:formData });
+      
+      if (res.ok) {
+        obj.imageUrl = await res.text();
+        console.log("상세 이미지 업로드 성공:", obj.imageUrl);
+      } else {
+        throw new Error("업로드 실패");
+      }
+    } catch (error) {
+      console.error("상세 이미지 업로드 오류:", error);
+      alert("상세 이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+    }
   });
 
   // 삭제 버튼
@@ -88,37 +158,66 @@ function addDetailForm(detail={title:"",description:"",imageUrl:""}) {
 
 $("#addDetailBtn").addEventListener("click", ()=> addDetailForm());
 
-// ===== 등록/수정 버튼 =====
+// ===== 등록/수정 버튼 (유효성 검사 강화) =====
 $("#submitBtn").addEventListener("click", async ()=>{
-  if (!uploadedCoverUrl) {
-    alert("대표 이미지를 업로드하세요!");
+  // 필수 입력값 검사
+  const title = $("#title").value.trim();
+  const creator = $("#creator").value.trim();
+  const description = $("#description").value.trim();
+  
+  if (!title) {
+    alert("프로젝트 제목을 입력해주세요.");
+    $("#title").focus();
+    return;
+  }
+  
+  if (!creator) {
+    alert("작성자를 입력해주세요.");
+    $("#creator").focus();
+    return;
+  }
+  
+  if (!description) {
+    alert("프로젝트 설명을 입력해주세요.");
+    $("#description").focus();
     return;
   }
 
-  const data = {
-    id: projectId || null,
-    title: $("#title").value,
-    creator: $("#creator").value,
-    description: $("#description").value,
-    coverUrl: uploadedCoverUrl,
-    link: $("#link").value,
-    tags: $("#tags").value.split(",").map(t=>t.trim()),
-    details: detailForms
-  };
+  if (!uploadedCoverUrl) {
+    alert("대표 이미지를 업로드해주세요!");
+    return;
+  }
 
-  const method = projectId ? "PUT" : "POST";
-  const url = projectId ? `/api/portfolios/${projectId}` : "/api/portfolios";
+  try {
+    const data = {
+      id: projectId || null,
+      title: title,
+      creator: creator,
+      description: description,
+      coverUrl: uploadedCoverUrl,
+      link: $("#link").value.trim(),
+      tags: $("#tags").value.split(",").map(t=>t.trim()).filter(t=>t.length > 0),
+      details: detailForms
+    };
 
-  const res = await fetch(url, {
-    method,
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(data)
-  });
+    const method = projectId ? "PUT" : "POST";
+    const url = projectId ? `/api/portfolios/${projectId}` : "/api/portfolios";
 
-  if (res.ok) {
-    alert(projectId ? "프로젝트가 수정되었습니다!" : "프로젝트가 등록되었습니다!");
-    location.href = "/admin-list";
-  } else {
-    alert("실패했습니다.");
+    const res = await fetch(url, {
+      method,
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      alert(projectId ? "프로젝트가 수정되었습니다!" : "프로젝트가 등록되었습니다!");
+      location.href = "/admin-list";
+    } else {
+      const errorText = await res.text();
+      throw new Error(`서버 오류: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("프로젝트 저장 오류:", error);
+    alert("프로젝트 저장에 실패했습니다. 다시 시도해주세요.");
   }
 });
