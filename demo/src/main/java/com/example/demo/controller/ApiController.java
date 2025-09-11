@@ -8,6 +8,7 @@ import com.example.demo.service.FolioService;
 import com.example.demo.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entity.Folio;
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class ApiController {
 
     // 프로젝트 등록
     @PostMapping("/portfolios")
-    public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto dto) {
+    public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectDto dto) {
         Project saved = projectService.createProject(dto);
         return ResponseEntity.ok(projectService.toDto(saved));
     }
@@ -47,7 +48,7 @@ public class ApiController {
     @PutMapping("/portfolios/{id}")
     public ResponseEntity<ProjectDto> updateProject(
             @PathVariable Long id,
-            @RequestBody ProjectDto dto) {
+            @Valid @RequestBody ProjectDto dto) {
         Project updated = projectService.updateProject(id, dto);
         return ResponseEntity.ok(projectService.toDto(updated));
     }
@@ -65,9 +66,9 @@ public class ApiController {
         return folioService.getFolio(id);
     }
 
-    // ===== ✅ 개인 소개 등록 및 수정 통합 API =====
+    // 개인 소개 등록 및 수정 통합 API
     @PostMapping("/folios") // PUT 대신 POST 사용
-    public ResponseEntity<FolioDto> createOrUpdateFolio(@RequestBody FolioDto dto) {
+    public ResponseEntity<FolioDto> createOrUpdateFolio(@Valid @RequestBody FolioDto dto) {
         // ID가 1로 고정되도록 DTO를 설정 (자기소개는 항상 1번)
         dto.setId(1L); 
         Folio saved = folioService.createOrUpdateFolio(dto);
