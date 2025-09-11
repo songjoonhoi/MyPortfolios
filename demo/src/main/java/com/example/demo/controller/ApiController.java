@@ -6,14 +6,17 @@ import com.example.demo.entity.Folio;
 import com.example.demo.entity.Project;
 import com.example.demo.service.FolioService;
 import com.example.demo.service.ProjectService;
-import lombok.RequiredArgsConstructor;
-import com.example.demo.entity.Folio;
 import jakarta.validation.Valid;
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 
 
@@ -27,8 +30,12 @@ public class ApiController {
 
     // 전체 프로젝트 조회
     @GetMapping("/portfolios")
-    public List<ProjectDto> getAllProjects() {
-        return projectService.getAllProjects();
+    public Page<ProjectDto> getAllProjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int size) {
+        // 페이지 번호, 개수, 정렬 방식(최신순)을 담아 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return projectService.getAllProjects(pageable);
     }
 
     // 단일 프로젝트 조회
@@ -74,4 +81,7 @@ public class ApiController {
         Folio saved = folioService.createOrUpdateFolio(dto);
         return ResponseEntity.ok(folioService.getFolio(saved.getId()));
     }
+
+    
+    
 }

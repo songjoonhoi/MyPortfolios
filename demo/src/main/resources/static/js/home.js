@@ -2,11 +2,13 @@ const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 const state = {
-  data: [],
+  // data: [], // 전체 데이터를 저장할 필요가 없어짐
   query: "",
   sort: "latest",
-  page: 1,
+  page: 0, // ✅ 페이지 번호는 0부터 시작
   pageSize: 9,
+  isLastPage: false, // ✅ 마지막 페이지인지 확인하는 변수 추가
+  isLoading: false,  // ✅ 중복 요청 방지를 위한 변수 추가
 };
 
 // 날짜 포맷
@@ -37,7 +39,6 @@ function createCard(project){
   const el = document.createElement("article");
   el.className = "card";
   
-  // 안전한 이미지 URL 처리
   const imageUrl = project.coverUrl || createPlaceholderImage('No Image');
   const fallbackImage = createPlaceholderImage('Image Error', '#f56565');
   
@@ -65,76 +66,40 @@ function createCard(project){
   return el;
 }
 
-// 데이터 필터링/정렬
-function getFilteredSortedData(){
-  let data = [...state.data];
-  const q = state.query.toLowerCase();
-  if (q){
-    data = data.filter(p => 
-      p.title.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.creator.toLowerCase().includes(q) ||
-      (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
-    );
-  }
-  if (state.sort === "latest"){
-    data.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
-  } else if (state.sort === "popular"){
-    data.sort((a,b)=> b.likes - a.likes);
-  } else if (state.sort === "title"){
-    data.sort((a,b)=> a.title.localeCompare(b.title,"ko"));
-  }
-  return data;
-}
-
-// 그리드 렌더링
-function renderGrid(){
+// 그리드 렌더링 함수 (데이터 추가 방식)
+function renderGrid(projects) {
   const grid = $("#grid");
-  grid.innerHTML = "";
-  const all = getFilteredSortedData();
-  const slice = all.slice(0, state.page * state.pageSize);
+  
+  if (state.page === 0) {
+      grid.innerHTML = ""; // 첫 페이지일 때만 그리드를 비움
+  }
 
-  if (slice.length === 0){
-    grid.innerHTML = `<p class="note">조건에 맞는 프로젝트가 없습니다.</p>`;
+  if (projects.length === 0 && state.page === 0) {
+    grid.innerHTML = `<p class="note" style="grid-column: 1 / -1;">등록된 프로젝트가 없습니다.</p>`;
     return;
   }
-  slice.forEach(p => grid.appendChild(createCard(p)));
-  $("#btnLoadMore").classList.toggle("hidden", slice.length >= all.length);
+  
+  projects.forEach(p => grid.appendChild(createCard(p)));
 }
 
-// 툴바 이벤트
-function attachToolbarHandlers(){
-  $("#searchInput").addEventListener("input", e=>{
-    state.query = e.target.value.trim();
-    state.page = 1;
-    renderGrid();
-  });
-  $("#sortSelect").addEventListener("change", e=>{
-    state.sort = e.target.value;
-    state.page = 1;
-    renderGrid();
-  });
-  $("#btnClear").addEventListener("click", ()=>{
-    state.query = ""; state.sort="latest"; state.page=1;
-    $("#searchInput").value="";
-    $("#sortSelect").value="latest";
-    renderGrid();
-  });
-  $("#btnLoadMore").addEventListener("click", ()=>{
-    state.page++;
-    renderGrid();
-  });
-}
+// 데이터 fetch 함수 (페이징 방식)
+async function loadData() {
+  if (state.isLastPage || state.isLoading) return; 
 
-// 데이터 fetch (에러 처리 개선)
-async function loadData(){
+  state.isLoading = true;
+  
   try {
-    const res = await fetch("/api/portfolios");
+    const res = await fetch(`/api/portfolios?page=${state.page}&size=${state.pageSize}`);
     if (!res.ok) {
       throw new Error(`서버 오류: ${res.status}`);
     }
-    state.data = await res.json();
-    renderGrid();
+    
+    const pageData = await res.json();
+    renderGrid(pageData.content);
+
+    state.isLastPage = pageData.last;
+    $("#btnLoadMore").classList.toggle("hidden", state.isLastPage);
+
   } catch (error) {
     console.error("데이터 로드 오류:", error);
     const grid = $("#grid");
@@ -142,15 +107,33 @@ async function loadData(){
       <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #fff5f5; border-radius: 8px; color: #c53030;">
         <h3>데이터를 불러올 수 없습니다</h3>
         <p>${error.message}</p>
-        <button onclick="loadData()" style="background: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">다시 시도</button>
+        <button onclick="location.reload()" style="background: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">다시 시도</button>
       </div>
     `;
+  } finally {
+    state.isLoading = false;
   }
 }
 
 // 초기화
-function init(){
-  attachToolbarHandlers();
-  loadData();
+function init() {
+  // attachToolbarHandlers(); // 검색/정렬 기능은 나중에 페이징과 연동해야 함
+  
+  const btnLoadMore = $("#btnLoadMore");
+  if (btnLoadMore) {
+    btnLoadMore.addEventListener("click", () => {
+      state.page++;
+      loadData();
+    });
+  }
+
+  const btnToTop = $("#btnToTop");
+  if(btnToTop) {
+    btnToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    window.addEventListener("scroll", () => btnToTop.classList.toggle("hidden", window.scrollY < 600));
+  }
+  
+  loadData(); // 첫 페이지 데이터 로드
 }
+
 document.addEventListener("DOMContentLoaded", init);

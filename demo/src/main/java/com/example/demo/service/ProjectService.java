@@ -5,15 +5,14 @@ import com.example.demo.dto.ProjectDetailDto;
 import com.example.demo.dto.ProjectDto;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.ProjectDetail;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;         
+import org.springframework.data.domain.Pageable;      
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -104,6 +103,12 @@ public class ProjectService {
             throw new RuntimeException("삭제할 프로젝트가 존재하지 않습니다.");
         }
         projectRepository.deleteById(id);
+    }
+
+    // 전제 조회를 Page<ProjectDto> 반환 타입으로 수정
+    public Page<ProjectDto> getAllProjects(Pageable pageable){
+        Page<Project> projectPage = projectRepository.findAll(pageable);
+        return projectPage.map(this::toDto);
     }
 
     // 🔥 수정된 fromDto 메서드 - 사용하지 않지만 남겨둠
