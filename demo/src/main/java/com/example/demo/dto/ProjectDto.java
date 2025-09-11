@@ -16,6 +16,7 @@ public class ProjectDto {
     
     @NotEmpty(message = "제목은 필수 입력 항목입니다.")
     @Size(max = 100, message = "제목은 100자를 초과할 수 없습니다.")
+    private String title;
 
     @NotEmpty(message = "작성자는 필수 입력 항목입니다.")
     @Size(max = 50)
@@ -25,7 +26,7 @@ public class ProjectDto {
     @Size(max = 1000)
     private String description;
 
-    private String title;
+    
     private String coverUrl;
     private String link;
     private int likes;

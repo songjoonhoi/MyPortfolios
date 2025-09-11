@@ -19,11 +19,10 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    // 전체 조회
-    public List<ProjectDto> getAllProjects() {
-        return projectRepository.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    // 전제 조회를 Page<ProjectDto> 반환 타입으로 수정
+    public Page<ProjectDto> getAllProjects(Pageable pageable){
+        Page<Project> projectPage = projectRepository.findAll(pageable);
+        return projectPage.map(this::toDto);
     }
 
     // 상세 조회
@@ -105,11 +104,7 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
-    // 전제 조회를 Page<ProjectDto> 반환 타입으로 수정
-    public Page<ProjectDto> getAllProjects(Pageable pageable){
-        Page<Project> projectPage = projectRepository.findAll(pageable);
-        return projectPage.map(this::toDto);
-    }
+    
 
     // 🔥 수정된 fromDto 메서드 - 사용하지 않지만 남겨둠
     public Project fromDto(ProjectDto dto) {

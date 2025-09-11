@@ -22,7 +22,7 @@ public class ViewController {
     // 홈(프로젝트 목록)
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("projects", projectService.getAllProjects());
+        
         return "home";
     }
     

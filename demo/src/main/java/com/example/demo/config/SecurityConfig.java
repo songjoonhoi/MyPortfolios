@@ -61,7 +61,10 @@ public class SecurityConfig {
                 .permitAll()
             )
             // H2 콘솔 사용을 위한 예외 설정
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+            .csrf(csrf -> csrf
+                // H2 콘솔과 모든 API 요청에 대해 CSRF 보호 비활성화
+                .ignoringRequestMatchers("/h2-console/**", "/api/**")
+            )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
