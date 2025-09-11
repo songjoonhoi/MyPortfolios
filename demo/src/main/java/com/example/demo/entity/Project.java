@@ -16,8 +16,8 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
 
     @Column(nullable = false, length = 100)
     private String title; // 프로젝트 제목

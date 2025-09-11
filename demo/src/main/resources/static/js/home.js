@@ -12,21 +12,40 @@ const state = {
 // 날짜 포맷
 const formatDate = iso => new Date(iso).toLocaleDateString('ko-KR');
 
+// 기본 placeholder 이미지 생성
+function createPlaceholderImage(text = 'No Image', color = '#365cff') {
+  return `data:image/svg+xml;base64,${btoa(`
+    <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="${color}"/>
+      <text x="50%" y="50%" font-family="Arial" font-size="20" fill="#fff" text-anchor="middle" dy=".3em">${text}</text>
+    </svg>
+  `)}`;
+}
+
 // 태그 뱃지 렌더링
 function renderTagBadges(tags){
+  if (!tags || tags.length === 0) return '';
+  
   const show = tags.slice(0, 3);
   const hidden = tags.length - show.length;
   const html = show.map(t => `<span class="tag-badge">${t}</span>`).join("");
   return html + (hidden > 0 ? `<span class="tag-badge more">+${hidden}</span>` : "");
 }
 
-// 카드 생성
+// 카드 생성 (개선된 이미지 처리)
 function createCard(project){
   const el = document.createElement("article");
   el.className = "card";
+  
+  // 안전한 이미지 URL 처리
+  const imageUrl = project.coverUrl || createPlaceholderImage('No Image');
+  const fallbackImage = createPlaceholderImage('Image Error', '#f56565');
+  
   el.innerHTML = `
     <figure class="card-media">
-      <img src="${project.coverUrl}" alt="${project.title}" />
+      <img src="${imageUrl}" 
+           alt="${project.title}"
+           onerror="this.src='${fallbackImage}'; this.onerror=null;" />
     </figure>
     <div class="card-body">
       <h3 class="card-title">${project.title}</h3>
@@ -55,7 +74,7 @@ function getFilteredSortedData(){
       p.title.toLowerCase().includes(q) ||
       p.description.toLowerCase().includes(q) ||
       p.creator.toLowerCase().includes(q) ||
-      p.tags.some(t => t.toLowerCase().includes(q))
+      (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
     );
   }
   if (state.sort === "latest"){
@@ -107,11 +126,26 @@ function attachToolbarHandlers(){
   });
 }
 
-// 데이터 fetch
+// 데이터 fetch (에러 처리 개선)
 async function loadData(){
-  const res = await fetch("/api/portfolios");
-  state.data = await res.json();
-  renderGrid();
+  try {
+    const res = await fetch("/api/portfolios");
+    if (!res.ok) {
+      throw new Error(`서버 오류: ${res.status}`);
+    }
+    state.data = await res.json();
+    renderGrid();
+  } catch (error) {
+    console.error("데이터 로드 오류:", error);
+    const grid = $("#grid");
+    grid.innerHTML = `
+      <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #fff5f5; border-radius: 8px; color: #c53030;">
+        <h3>데이터를 불러올 수 없습니다</h3>
+        <p>${error.message}</p>
+        <button onclick="loadData()" style="background: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">다시 시도</button>
+      </div>
+    `;
+  }
 }
 
 // 초기화
@@ -120,5 +154,3 @@ function init(){
   loadData();
 }
 document.addEventListener("DOMContentLoaded", init);
-
-

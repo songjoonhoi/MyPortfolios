@@ -7,6 +7,16 @@ const state = {
   error: null
 };
 
+// 기본 placeholder 이미지 생성
+function createPlaceholderImage(text = 'No Image', color = '#365cff') {
+  return `data:image/svg+xml;base64,${btoa(`
+    <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="${color}"/>
+      <text x="50%" y="50%" font-family="Arial" font-size="20" fill="#fff" text-anchor="middle" dy=".3em">${text}</text>
+    </svg>
+  `)}`;
+}
+
 // API 호출 함수
 async function fetchProjects() {
   try {
@@ -70,7 +80,7 @@ function showEmpty() {
   `;
 }
 
-// 관리자 카드 생성
+// 관리자 카드 생성 (개선된 이미지 처리)
 function createAdminCard(project) {
   const el = document.createElement("article");
   el.className = "card";
@@ -83,11 +93,15 @@ function createAdminCard(project) {
   const truncatedDesc = project.description && project.description.length > 100 ?
     project.description.substring(0, 100) + '...' : (project.description || '설명 없음');
 
+  // 안전한 이미지 URL 처리
+  const imageUrl = project.coverUrl || createPlaceholderImage('No Image');
+  const fallbackImage = createPlaceholderImage('Image Error', '#f56565');
+
   el.innerHTML = `
     <figure class="card-media">
-      <img src="${project.coverUrl || 'https://via.placeholder.com/400x200/f8fafc/718096?text=No+Image'}" 
+      <img src="${imageUrl}" 
            alt="${project.title}"
-           onerror="this.src='https://via.placeholder.com/400x200/f8fafc/718096?text=Image+Error'">
+           onerror="this.src='${fallbackImage}'; this.onerror=null;">
     </figure>
     <div class="card-body">
       <h3 class="card-title">${project.title || '제목 없음'}</h3>

@@ -17,6 +17,7 @@ public class Folio {
 
     private String name;    //이름
     private String bio;     // 자기소개
+    @Column(length = 1000)  // 🔥 길이 제한 확장 (255 → 1000)
     private String profileImg;  // 프로필 사진 경로
 
     @Lob

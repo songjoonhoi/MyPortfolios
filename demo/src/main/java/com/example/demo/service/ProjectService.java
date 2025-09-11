@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -34,17 +33,44 @@ public class ProjectService {
                 .map(this::toDto)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
     }
+    
     @Transactional
     // 신규 등록
     public Project createProject(ProjectDto dto) {
-        Project p = fromDto(dto);
+        // 🔥 수정: dto.getId()가 있어도 무시하고 새로운 엔티티 생성
+        Project p = Project.builder()
+                .title(dto.getTitle())
+                .creator(dto.getCreator())
+                .description(dto.getDescription())
+                .coverUrl(dto.getCoverUrl())
+                .link(dto.getLink())
+                .likes(dto.getLikes() != 0 ? dto.getLikes() : 0)
+                .createdAt(LocalDate.now())
+                .tags(dto.getTags())
+                .build();
+
+        // 상세 정보 처리
+        if (dto.getDetails() != null) {
+            p.setDetails(
+                    dto.getDetails().stream()
+                            .map(d -> ProjectDetail.builder()
+                                    .title(d.getTitle())
+                                    .description(d.getDescription())
+                                    .imageUrl(d.getImageUrl())
+                                    .project(p)
+                                    .build())
+                            .collect(Collectors.toList())
+            );
+        }
+        
         return projectRepository.save(p);
     }
 
     // 수정
     @Transactional
     public Project updateProject(Long id, ProjectDto dto){
-        Project existing = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
+        Project existing = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
 
         existing.setTitle(dto.getTitle());
         existing.setCreator(dto.getCreator());
@@ -69,7 +95,6 @@ public class ProjectService {
         }
 
         return projectRepository.save(existing);
-
     }
 
     // 삭제 메서드
@@ -81,10 +106,9 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
-    // DTO → Entity (🔥 수정된 부분)
+    // 🔥 수정된 fromDto 메서드 - 사용하지 않지만 남겨둠
     public Project fromDto(ProjectDto dto) {
         Project p = Project.builder()
-                .id(null) // 🔥 신규 등록 시 id를 null로 설정하여 자동 생성되도록 함
                 .title(dto.getTitle())
                 .creator(dto.getCreator())
                 .description(dto.getDescription())
