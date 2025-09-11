@@ -1,5 +1,5 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 const state = {
   query: "",
@@ -81,7 +81,7 @@ function renderGrid(projects) {
   projects.forEach(p => grid.appendChild(createCard(p)));
 }
 
-// 데이터 로드
+// 데이터 로드 - 강화된 에러 처리
 async function loadData() {
   if (state.isLastPage || state.isLoading) return; 
 
@@ -96,14 +96,31 @@ async function loadData() {
     });
     
     const res = await fetch(`/api/portfolios?${params}`);
+    
+    // 응답이 HTML인지 확인
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('서버에서 JSON이 아닌 응답을 받았습니다. API 엔드포인트를 확인해주세요.');
+    }
+    
     if (!res.ok) {
-      throw new Error(`서버 오류: ${res.status}`);
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
     
     const pageData = await res.json();
-    renderGrid(pageData.content);
-
-    state.isLastPage = pageData.last;
+    
+    // pageData가 올바른 구조인지 확인
+    if (!pageData || typeof pageData !== 'object') {
+      throw new Error('잘못된 응답 형식입니다.');
+    }
+    
+    // Page 객체 구조 확인
+    const content = pageData.content || [];
+    const isLast = pageData.last !== undefined ? pageData.last : true;
+    
+    renderGrid(content);
+    state.isLastPage = isLast;
+    
     const btnLoadMore = $("#btnLoadMore");
     if (btnLoadMore) {
       btnLoadMore.classList.toggle("hidden", state.isLastPage);
@@ -112,13 +129,15 @@ async function loadData() {
   } catch (error) {
     console.error("데이터 로드 오류:", error);
     const grid = $("#grid");
-    grid.innerHTML = `
-      <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #fff5f5; border-radius: 8px; color: #c53030;">
-        <h3>데이터를 불러올 수 없습니다</h3>
-        <p>${error.message}</p>
-        <button onclick="location.reload()" style="background: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">다시 시도</button>
-      </div>
-    `;
+    if (grid) {
+      grid.innerHTML = `
+        <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #fff5f5; border-radius: 8px; color: #c53030;">
+          <h3>데이터를 불러올 수 없습니다</h3>
+          <p>${error.message}</p>
+          <button onclick="location.reload()" style="background: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">페이지 새로고침</button>
+        </div>
+      `;
+    }
   } finally {
     state.isLoading = false;
   }
@@ -202,6 +221,7 @@ function init() {
     window.addEventListener("scroll", () => btnToTop.classList.toggle("hidden", window.scrollY < 600));
   }
   
+  // 초기 데이터 로드
   loadData();
 }
 

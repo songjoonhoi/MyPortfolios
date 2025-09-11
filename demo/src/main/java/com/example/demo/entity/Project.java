@@ -28,8 +28,10 @@ public class Project {
     @Column(length = 1000)
     private String description; // 설명
 
+    @Column(length = 2000)
     private String coverUrl; // 대표 이미지 url
 
+    @Column(length = 500)
     private String link;    // 외부 링크
 
     private int likes;     // 좋아요 수

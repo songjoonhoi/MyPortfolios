@@ -5,7 +5,7 @@ import com.example.demo.dto.FolioDto;
 import com.example.demo.entity.Folio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // 추가
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,14 +13,24 @@ public class FolioService {
     
     private final FolioRepository folioRepository;
 
-    // ID로 자기소개 조회
+    // ID로 자기소개 조회 - 더 안전한 처리
     public FolioDto getFolio(Long id){
         return folioRepository.findById(id)
                 .map(this::toDto)
-                .orElseThrow(() -> new RuntimeException("해당 프로필이 존재하지 않습니다."));
+                .orElse(createDefaultFolio()); // 없으면 기본값 반환
     }
 
-    // ===== ✅ 등록/수정 통합 메서드 =====
+    // 기본 자기소개 생성
+    private FolioDto createDefaultFolio() {
+        return FolioDto.builder()
+                .id(1L)
+                .name("개발자")
+                .bio("안녕하세요! 개발자입니다.")
+                .profileImg("https://via.placeholder.com/200x200/365cff/ffffff?text=Profile")
+                .skills("Java, Spring Boot")
+                .build();
+    }
+
     @Transactional
     public Folio createOrUpdateFolio(FolioDto dto) {
         // DTO를 Entity로 변환
@@ -44,5 +54,15 @@ public class FolioService {
                 .profileImg(folio.getProfileImg())
                 .skills(folio.getSkills())
                 .build();
+    }
+
+    // ✅ 추가: 직접 DTO 반환하는 getFolio 메서드
+    public FolioDto getFolio(Long id, boolean returnDefault) {
+        if (returnDefault) {
+            return folioRepository.findById(id)
+                    .map(this::toDto)
+                    .orElse(createDefaultFolio());
+        }
+        return getFolio(id);
     }
 }

@@ -1,5 +1,5 @@
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 const state = {
   page: 0,

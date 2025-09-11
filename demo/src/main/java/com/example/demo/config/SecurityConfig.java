@@ -35,10 +35,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
-                .requestMatchers("/h2-console/**").hasRole("ADMIN") // 관리자만 접근
+                // 정적 리소스와 API는 모두 허용
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/uploads/**", "/api/**").permitAll()
+                // H2 콘솔은 관리자만 접근
+                .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                // 공개 페이지는 모두 허용
                 .requestMatchers("/", "/projects/**", "/folio/**").permitAll()
+                // 관리자 페이지는 ADMIN 권한 필요
                 .requestMatchers("/admin/**", "/admin-list").hasRole("ADMIN")
+                // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -50,8 +55,9 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
+            // CSRF 보호를 API와 H2 콘솔에 대해 비활성화
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/api/uploads/**")
+                .ignoringRequestMatchers("/h2-console/**", "/api/**")
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
