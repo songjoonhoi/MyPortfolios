@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -37,6 +38,22 @@ public class ApiController {
     public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto dto) {
         Project saved = projectService.createProject(dto);
         return ResponseEntity.ok(projectService.toDto(saved));
+    }
+
+    // 프로젝트 수정
+    @PutMapping("/portfolios/{id}")
+    public ResponseEntity<ProjectDto> updateProject(
+            @PathVariable Long id,
+            @RequestBody ProjectDto dto) {
+        Project updated = projectService.updateProject(id, dto);
+        return ResponseEntity.ok(projectService.toDto(updated));
+    }
+    
+    // 프로젝트 삭제
+    @DeleteMapping("/portfolios/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.noContent().build();
     }
 
     // 개인 소개 조회

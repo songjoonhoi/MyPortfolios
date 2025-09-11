@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - 프로젝트 목록</title>
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+  <main class="admin-container">
+    <h1>관리자 - 프로젝트 목록</h1>
+    <div id="adminList" class="grid"></div>
+    <div class="actions">
+      <a href="/admin" class="btn-submit">+ 새 프로젝트 등록</a>
+    </div>
+  </main>
+
+  <script th:src="@{/js/admin-list.js}"></script>
+</body>
+</html>

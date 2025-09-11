@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -37,11 +39,18 @@ public class ViewController {
         model.addAttribute("folio", folioService.getFolio(id));
         return "folio";
     }
-    
+
+    // 관리자 등록/수정 
     @GetMapping("/admin")
     public String admin() {
         return "admin";
     }
+
+    @GetMapping("/admin-list")
+    public String adminList() {
+        return "admin-list";
+    }
+    
     
     
 

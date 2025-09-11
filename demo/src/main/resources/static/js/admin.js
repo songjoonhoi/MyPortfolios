@@ -1,130 +1,124 @@
-const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
-const form = $("#projectForm");
-const coverInput = $("#coverFile");
-const preview = $("#preview");
-const detailsContainer = $("#detailsContainer");
-const addDetailBtn = $("#addDetailBtn");
+const $ = (sel, ctx=document)=>ctx.querySelector(sel);
+const $$ = (sel, ctx=document)=>Array.from(ctx.querySelectorAll(sel));
 
 let uploadedCoverUrl = "";
-let detailEntries = []; // 상세 항목 저장
+let detailForms = [];
 
-// ===== 대표 이미지 업로드 =====
-coverInput.addEventListener("change", async () => {
-  const file = coverInput.files[0];
-  if (!file) return;
+// ===== URL에서 id 확인 =====
+const urlParams = new URLSearchParams(window.location.search);
+const projectId = urlParams.get("id");
 
-  // 미리보기
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = "block";
-  };
-  reader.readAsDataURL(file);
+// ===== 수정 모드면 데이터 불러오기 =====
+if (projectId) {
+  $("#formTitle").textContent = "프로젝트 수정";
+  $("#submitBtn").textContent = "수정 완료";
 
-  // 서버 업로드
-  const formData = new FormData();
-  formData.append("file", file);
-  const res = await fetch("/api/uploads/images", { method: "POST", body: formData });
+  fetch(`/api/portfolios/${projectId}`)
+    .then(res => res.json())
+    .then(p => {
+      $("#projectId").value = p.id;
+      $("#title").value = p.title;
+      $("#creator").value = p.creator;
+      $("#description").value = p.description;
+      $("#link").value = p.link;
+      $("#tags").value = p.tags.join(", ");
+      uploadedCoverUrl = p.coverUrl;
+      if (p.coverUrl) {
+        $("#preview").src = p.coverUrl;
+        $("#preview").style.display = "block";
+      }
 
-  if (res.ok) {
-    uploadedCoverUrl = await res.text();
-    alert("대표 이미지 업로드 성공!");
-  } else {
-    alert("대표 이미지 업로드 실패");
-  }
-});
+      // 상세 갤러리 불러오기
+      if (p.details) {
+        p.details.forEach(d => addDetailForm(d));
+      }
+    });
+}
 
-// ===== 상세 항목 추가 =====
-addDetailBtn.addEventListener("click", () => {
-  const index = detailEntries.length;
-
-  const div = document.createElement("div");
-  div.className = "detail-item";
-  div.innerHTML = `
+// ===== 상세 갤러리 추가 폼 =====
+function addDetailForm(detail={title:"",description:"",imageUrl:""}) {
+  const container = document.createElement("div");
+  container.className = "detail-card";
+  container.innerHTML = `
     <label>상세 제목</label>
-    <input type="text" class="detail-title" required />
+    <input type="text" class="detail-title" value="${detail.title}" />
 
     <label>상세 설명</label>
-    <textarea class="detail-desc" required></textarea>
+    <textarea class="detail-desc">${detail.description}</textarea>
 
     <label>상세 이미지</label>
     <input type="file" class="detail-file" accept="image/*" />
-    <img class="detail-preview" style="display:none;" />
+    <img class="detail-preview" style="display:${detail.imageUrl ? "block":"none"};" src="${detail.imageUrl||""}" />
+
+    <button type="button" class="btn-remove">삭제</button>
   `;
+  $("#detailsContainer").appendChild(container);
 
-  detailsContainer.appendChild(div);
+  const obj = { ...detail };
+  detailForms.push(obj);
 
-  const fileInput = div.querySelector(".detail-file");
-  const imgPreview = div.querySelector(".detail-preview");
+  // 제목/설명 이벤트
+  container.querySelector(".detail-title").addEventListener("input", e=>obj.title=e.target.value);
+  container.querySelector(".detail-desc").addEventListener("input", e=>obj.description=e.target.value);
 
-  fileInput.addEventListener("change", async () => {
-    const file = fileInput.files[0];
+  // 이미지 업로드 이벤트
+  container.querySelector(".detail-file").addEventListener("change", async (e)=>{
+    const file = e.target.files[0];
     if (!file) return;
 
-    // 미리보기
     const reader = new FileReader();
-    reader.onload = e => {
-      imgPreview.src = e.target.result;
-      imgPreview.style.display = "block";
+    reader.onload = ev=>{
+      container.querySelector(".detail-preview").src = ev.target.result;
+      container.querySelector(".detail-preview").style.display = "block";
     };
     reader.readAsDataURL(file);
 
-    // 서버 업로드
     const formData = new FormData();
     formData.append("file", file);
-    const res = await fetch("/api/uploads/images", { method: "POST", body: formData });
-
-    if (res.ok) {
-      const url = await res.text();
-      detailEntries[index] = { ...detailEntries[index], imageUrl: url };
-    } else {
-      alert("상세 이미지 업로드 실패");
-    }
+    const res = await fetch("/api/uploads/images", { method:"POST", body:formData });
+    if (res.ok) obj.imageUrl = await res.text();
   });
 
-  // 새 항목 초기화
-  detailEntries.push({ title: "", description: "", imageUrl: "" });
-
-  // 값 변경 반영
-  div.querySelector(".detail-title").addEventListener("input", e => {
-    detailEntries[index].title = e.target.value;
+  // 삭제 버튼
+  container.querySelector(".btn-remove").addEventListener("click", ()=>{
+    container.remove();
+    detailForms = detailForms.filter(d => d !== obj);
   });
-  div.querySelector(".detail-desc").addEventListener("input", e => {
-    detailEntries[index].description = e.target.value;
-  });
-});
+}
 
-// ===== 최종 등록 =====
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+$("#addDetailBtn").addEventListener("click", ()=> addDetailForm());
 
+// ===== 등록/수정 버튼 =====
+$("#submitBtn").addEventListener("click", async ()=>{
   if (!uploadedCoverUrl) {
     alert("대표 이미지를 업로드하세요!");
     return;
   }
 
   const data = {
+    id: projectId || null,
     title: $("#title").value,
     creator: $("#creator").value,
     description: $("#description").value,
     coverUrl: uploadedCoverUrl,
     link: $("#link").value,
-    tags: $("#tags").value.split(",").map(t => t.trim()),
-    details: detailEntries // 상세 항목들
+    tags: $("#tags").value.split(",").map(t=>t.trim()),
+    details: detailForms
   };
 
-  const res = await fetch("/api/portfolios", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  const method = projectId ? "PUT" : "POST";
+  const url = projectId ? `/api/portfolios/${projectId}` : "/api/portfolios";
+
+  const res = await fetch(url, {
+    method,
+    headers: {"Content-Type":"application/json"},
     body: JSON.stringify(data)
   });
 
   if (res.ok) {
-    alert("프로젝트가 등록되었습니다!");
-    location.href = "/";
+    alert(projectId ? "프로젝트가 수정되었습니다!" : "프로젝트가 등록되었습니다!");
+    location.href = "/admin-list";
   } else {
-    alert("등록 실패");
+    alert("실패했습니다.");
   }
 });

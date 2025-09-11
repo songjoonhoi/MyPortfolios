@@ -1,0 +1,50 @@
+.admin-project-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fafafa;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.admin-project-card img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.admin-project-info {
+  flex: 1;
+}
+
+.admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-edit:hover { background: #e0a800; }
+
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-delete:hover { background: #a71d2a; }
