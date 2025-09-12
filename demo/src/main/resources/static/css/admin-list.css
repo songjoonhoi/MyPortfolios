@@ -196,16 +196,18 @@
   left: 100%;
 }
 
+/* ▼▼▼ [수정] 수정 버튼 색상 변경 ▼▼▼ */
 .btn-edit {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 .btn-edit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
 }
+/* ▲▲▲ [수정] 수정 버튼 색상 변경 ▲▲▲ */
 
 .btn-delete {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
