@@ -311,3 +311,24 @@
     font-size: 0.9rem;
   }
 }
+
+/* folio.css에 추가 */
+.avatar-image {
+    transition: opacity 0.3s ease;
+}
+
+.avatar-image:not([src]), 
+.avatar-image[src=""] {
+    opacity: 0.3;
+    background: linear-gradient(135deg, #365cff, #5b8cff);
+}
+
+.avatar-image.loading::after {
+    content: "로딩 중...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+}

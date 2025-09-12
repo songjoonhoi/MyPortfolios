@@ -122,9 +122,17 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.gallery-card:hover .card-caption {
-  opacity: 1;
-  transform: translateY(0);
+.gallery-card .card-caption h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.gallery-card .card-caption p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  line-height: 1.4;
 }
 
 

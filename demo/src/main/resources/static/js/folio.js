@@ -1,6 +1,8 @@
 // folio.js - 새로운 자기소개 페이지용 JavaScript
 
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('Folio page loaded');
+    
     // 페이지 로드 애니메이션
     initPageAnimations();
     
@@ -9,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // 기하학적 패턴 애니메이션
     initGeometricAnimations();
+    
+    // 이미지 로드 에러 처리 (무한 루프 방지)
+    initImageErrorHandling();
 });
 
 /**
@@ -97,28 +102,62 @@ function initGeometricAnimations() {
 }
 
 /**
- * 스크롤에 따른 시차 효과
+ * ⭐ 수정된 이미지 로드 에러 처리 (무한 루프 방지)
  */
-function initParallaxEffect() {
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const shapes = document.querySelectorAll('.shape');
+function initImageErrorHandling() {
+    const avatarImage = document.querySelector('.avatar-image');
+    
+    if (avatarImage) {
+        // 이미지 로드 에러 플래그 추가
+        let errorHandled = false;
         
-        shapes.forEach((shape, index) => {
-            const speed = (index + 1) * 0.3;
-            const yPos = -(scrolled * speed);
-            shape.style.transform = `translate(0, ${yPos}px) rotate(${45 + scrolled * 0.1}deg)`;
-        });
-    });
+        avatarImage.addEventListener('error', function() {
+            console.log('이미지 로드 실패:', this.src);
+            
+            // 이미 에러 처리를 했다면 더 이상 처리하지 않음
+            if (errorHandled) {
+                console.log('이미 에러 처리 완료됨');
+                return;
+            }
+            
+            errorHandled = true;
+            
+            // 플레이스홀더 이미지로 변경 (온라인 서비스 사용)
+            this.src = 'https://via.placeholder.com/200x200/365cff/ffffff?text=Profile';
+            
+            // 만약 온라인 플레이스홀더도 실패할 경우를 대비해 추가 처리
+            this.addEventListener('error', function() {
+                console.log('플레이스홀더 이미지도 로드 실패');
+                // CSS로 처리하거나 숨김
+                this.style.display = 'none';
+                
+                // 대체 아이콘을 보여주는 div 생성
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = `
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #365cff, #5b8cff);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 60px;
+                    font-weight: bold;
+                `;
+                placeholder.textContent = '👤';
+                
+                this.parentNode.insertBefore(placeholder, this);
+            }, { once: true }); // once: true로 한 번만 실행되도록 보장
+            
+        }, { once: true }); // once: true로 한 번만 실행되도록 보장
+    }
 }
-
-// 스크롤 시차 효과 초기화 (필요한 경우)
-// initParallaxEffect();
 
 /**
  * 연락처 아이템 클릭 이벤트 (복사 기능)
  */
-document.addEventListener('DOMContentLoaded', function() {
+function initContactCopyFunction() {
     const contactItems = document.querySelectorAll('.contact-item');
     
     contactItems.forEach(item => {
@@ -127,17 +166,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 이메일이나 전화번호 형식인 경우에만 복사 기능 실행
             if (text.includes('@') || text.includes('010-') || text.includes('github')) {
-                navigator.clipboard.writeText(text).then(() => {
-                    // 복사 완료 피드백
-                    const originalText = this.innerHTML;
-                    this.style.color = '#10b981';
-                    
-                    setTimeout(() => {
-                        this.style.color = '';
-                    }, 1000);
-                }).catch(err => {
-                    console.log('복사 실패:', err);
-                });
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        // 복사 완료 피드백
+                        const originalColor = this.style.color;
+                        this.style.color = '#10b981';
+                        
+                        setTimeout(() => {
+                            this.style.color = originalColor;
+                        }, 1000);
+                    }).catch(err => {
+                        console.log('복사 실패:', err);
+                    });
+                }
             }
         });
         
@@ -150,17 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.opacity = '0.9';
         });
     });
-});
+}
 
-/**
- * 이미지 로드 에러 처리
- */
+// 연락처 복사 기능 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    const avatarImage = document.querySelector('.avatar-image');
-    
-    if (avatarImage) {
-        avatarImage.addEventListener('error', function() {
-            this.src = '/img/profile-default.jpg';
-        });
-    }
+    initContactCopyFunction();
 });

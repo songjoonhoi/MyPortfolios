@@ -1,4 +1,107 @@
-<!-- Expertise -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>자기소개 - My Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/folio.css}">
+    <!-- Favicon 추가 -->
+    <link rel="icon" type="image/x-icon" th:href="@{/img/favicon.ico}">
+</head>
+<body class="folio-page" data-page="folio">
+
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+
+    <main class="folio-container">
+        <!-- 왼쪽 프로필 섹션 -->
+        <section class="profile-section">
+            <!-- 배경 기하학 패턴 -->
+            <div class="geometric-bg">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+            
+            <!-- 프로필 컨텐츠 -->
+            <div class="profile-content">
+                <div class="profile-avatar">
+                    <img th:src="${folio.profileImg != null and !folio.profileImg.isEmpty()} ? ${folio.profileImg} : 'https://via.placeholder.com/200x200/365cff/ffffff?text=Profile'" 
+                         alt="프로필 이미지" 
+                         class="avatar-image"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/200x200/365cff/ffffff?text=Profile';">
+                </div>
+                
+                <h1 class="profile-name" th:text="${folio.name}">개발자</h1>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <span>contact@email.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">🔗</span>
+                        <span>github.com/username</span>
+                    </div>
+                </div>
+                
+                <p class="profile-bio" th:text="${folio.bio}">안녕하세요! 개발자입니다.</p>
+            </div>
+        </section>
+
+        <!-- 오른쪽 정보 섹션 -->
+        <section class="info-section">
+            
+            <!-- Skills -->
+            <div class="info-block">
+                <h2 class="block-title">SKILLS</h2>
+                <div class="block-content">
+                    <div class="skills-list">
+                        <th:block th:if="${folio.skills != null and !folio.skills.isEmpty()}">
+                            <span th:each="skill, iterStat : ${#strings.listSplit(folio.skills, ',')}" 
+                                  class="skill-item" 
+                                  th:text="${#strings.trim(skill)}">Java</span>
+                        </th:block>
+                        <th:block th:unless="${folio.skills != null and !folio.skills.isEmpty()}">
+                            <span class="skill-item">Java</span>
+                            <span class="skill-item">Spring Boot</span>
+                            <span class="skill-item">JavaScript</span>
+                            <span class="skill-item">MySQL</span>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="info-block" th:if="${folio.educations != null and !folio.educations.isEmpty()}">
+                <h2 class="block-title">EDUCATION</h2>
+                <div class="block-content">
+                    <div th:each="education : ${folio.educations}" class="info-item">
+                        <div class="item-period" th:text="${education.period}">2015.03 - 2019.02</div>
+                        <div class="item-details">
+                            <h3 class="item-title" th:text="${education.title}">서울대학교</h3>
+                            <p class="item-subtitle" th:text="${education.subtitle}">컴퓨터공학과 학사</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career -->
+            <div class="info-block" th:if="${folio.careers != null and !folio.careers.isEmpty()}">
+                <h2 class="block-title">CAREER</h2>
+                <div class="block-content">
+                    <div th:each="career : ${folio.careers}" class="info-item">
+                        <div class="item-period" th:text="${career.period}">2019.01 - 현재</div>
+                        <div class="item-details">
+                            <h3 class="item-title" th:text="${career.title}">ABC 스타트업</h3>
+                            <p class="item-subtitle" th:text="${career.subtitle}">백엔드 개발자</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expertise -->
             <div class="info-block">
                 <h2 class="block-title">EXPERTISE</h2>
                 <div class="block-content" th:if="${folio.expertises != null and !folio.expertises.isEmpty()}">
@@ -14,3 +117,12 @@
                     </div>
                 </div>
             </div>
+            
+        </section>
+    </main>
+
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+    <script th:src="@{/js/folio.js}"></script>
+</body>
+</html>

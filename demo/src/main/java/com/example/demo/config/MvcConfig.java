@@ -15,10 +15,22 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 사용자가 업로드한 파일 경로
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:///" + uploadDir + "/");
+                .addResourceLocations("file:///" + uploadDir + "/")
+                .setCachePeriod(3600);
 
         // 프로젝트 내부 기본 이미지, CSS, JS 경로
         registry.addResourceHandler("/css/**", "/js/**", "/img/**")
-                .addResourceLocations("classpath:/static/css/", "classpath:/static/js/", "classpath:/static/img/");
+                .addResourceLocations("classpath:/static/css/", "classpath:/static/js/", "classpath:/static/img/")
+                .setCachePeriod(3600);
+                
+        // ⭐ Favicon 처리 수정 - 파일로 직접 매핑하지 않음
+        registry.addResourceHandler("/favicon.ico")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(86400);
+        
+        // 정적 리소스 전체에 대한 폴백
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(3600);
     }
 }

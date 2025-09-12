@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FolioDto;
 import com.example.demo.service.FolioService;
 import com.example.demo.service.ProjectService;
 
@@ -36,8 +37,8 @@ public class ViewController {
         }
     }
 
-    // 자기소개 페이지 - 데이터를 모델에 추가
-    @GetMapping("/folio/{id}")
+    // 자기소개 페이지 - 디버깅 로그 추가
+@GetMapping("/folio/{id}")
 public String folio(@PathVariable Long id, Model model, HttpServletResponse response) {
     try {
         // 캐시 방지 헤더 추가
@@ -45,10 +46,26 @@ public String folio(@PathVariable Long id, Model model, HttpServletResponse resp
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
         
-        model.addAttribute("folio", folioService.getFolio(id));
+        System.out.println("=== Folio Debug Info ===");
+        System.out.println("Request ID: " + id);
+        
+        FolioDto folio = folioService.getFolio(id);
+        System.out.println("Folio Name: " + folio.getName());
+        System.out.println("Folio Bio: " + folio.getBio());
+        System.out.println("Folio ProfileImg: " + folio.getProfileImg());
+        System.out.println("Education Count: " + (folio.getEducations() != null ? folio.getEducations().size() : "null"));
+        System.out.println("Career Count: " + (folio.getCareers() != null ? folio.getCareers().size() : "null"));
+        System.out.println("Expertise Count: " + (folio.getExpertises() != null ? folio.getExpertises().size() : "null"));
+        
+        model.addAttribute("folio", folio);
         return "folio";
     } catch (Exception e) {
-        model.addAttribute("folio", folioService.getFolio(1L));
+        System.err.println("Folio 로드 오류: " + e.getMessage());
+        e.printStackTrace();
+        
+        // 에러 발생 시 기본 데이터로 폴백
+        FolioDto defaultFolio = folioService.getFolio(1L);
+        model.addAttribute("folio", defaultFolio);
         return "folio";
     }
 }

@@ -67,7 +67,7 @@ function showEmpty() {
     console.log("등록된 프로젝트가 없습니다.");
 }
 
-/**
+/*
  * ▼▼▼ [수정] 새로운 대시보드 디자인에 맞는 프로젝트 카드 생성 함수 ▼▼▼
  * @param {object} project - 프로젝트 데이터 객체
  * @returns {HTMLElement} - 생성된 카드 엘리먼트
@@ -80,33 +80,26 @@ function createAdminCard(project) {
   // 태그는 최대 2개까지만 표시
   const tagsHtml = (project.tags || []).slice(0, 2).map(tag => `<span class="tag">${tag}</span>`).join("");
   // 대표 이미지가 있으면 썸네일로, 없으면 기본 아이콘 표시
-  const iconAreaHtml = project.coverUrl
+  const mediaHtml = project.coverUrl
     ? `<img src="${project.coverUrl}" alt="${project.title}" class="card-thumbnail">`
     : `<span class="file-icon">📄</span>`;
 
   el.innerHTML = `
-    <div class="card-icon-area">${iconAreaHtml}</div>
+    <div class="card-media">${mediaHtml}</div>
     <div class="card-body">
       <h3 class="card-title">${project.title}</h3>
       <div class="card-tags">${tagsHtml}</div>
       <p class="card-date">${formattedDate} 생성</p>
     </div>
-    <div class="card-actions-menu">
-      <button class="kebab-btn" aria-label="더보기">...</button>
-      <div class="menu-dropdown">
-        <a href="/admin?id=${project.id}">수정</a>
-        <button class="btn-delete">삭제</button>
-      </div>
+    <div class="card-actions">
+      <a href="/admin?id=${project.id}" class="action-btn btn-edit">
+        <span>✏️</span> 수정
+      </a>
+      <button class="action-btn btn-delete">
+        <span>🗑️</span> 삭제
+      </button>
     </div>
   `;
-
-  // '더보기' 버튼 클릭 시 드롭다운 메뉴 토글
-  const kebabBtn = el.querySelector(".kebab-btn");
-  const dropdown = el.querySelector(".menu-dropdown");
-  kebabBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // a 태그의 기본 동작 방지
-    dropdown.classList.toggle("show");
-  });
 
   // 삭제 버튼 이벤트 리스너 연결
   el.querySelector(".btn-delete").addEventListener("click", () => handleDelete(project.id, project.title));
