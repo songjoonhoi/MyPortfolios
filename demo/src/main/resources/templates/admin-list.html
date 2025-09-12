@@ -4,18 +4,22 @@
   <meta charset="UTF-8">
   <title>관리자 - 프로젝트 목록</title>
   <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/admin-list.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
   <main class="admin-list-container">
-    <h1>관리자 - 프로젝트 목록</h1>
-    <div id="adminList" class="grid"></div>
-    <div class="actions">
-      <a href="/admin" class="btn-submit">+ 새 프로젝트 등록</a>
-    </div>
-  </main>
-
+    <h1>내 포트폴리오</h1>
+    <div id="adminList" class="grid">
+      <a href="/admin" class="card new-project-card" aria-label="새 포트폴리오 만들기">
+        <div class="new-project-card-inner">
+          <span class="plus-icon">+</span>
+          <span class="new-project-text">새 포트폴리오 만들기</span>
+        </div>
+      </a>
+      </div>
+    </main>
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
   <script th:src="@{/js/admin-list.js}"></script>

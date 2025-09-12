@@ -1,34 +1,67 @@
 /* admin-list.css - 관리자 프로젝트 목록 전용 스타일 */
 
 /* ===== 메인 컨테이너 ===== */
-.admin-container {
+.admin-list-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-.admin-container h1 {
+.admin-list-container h1 {
   color: #333;
   margin-bottom: 2rem;
-  text-align: center;
   font-size: 2rem;
   font-weight: 700;
+  padding-left: 8px; /* 좌측 정렬 시 여백 */
 }
 
 /* ===== 그리드 레이아웃 ===== */
+/* main.css의 grid를 그대로 활용하되, 카드 최소 크기를 조정합니다. */
 #adminList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
 }
 
-/* ===== 프로젝트 카드 ===== */
-.admin-project-card,
-.card {
+/* ===== "새 포트폴리오 만들기" 카드 ===== */
+.new-project-card {
+  /* 기존 card 스타일을 상속받되, 내부 콘텐츠 정렬을 위해 flex로 변경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  
+  /* 디자인 클론 */
+  background-color: #fff;
+  border: 2px dashed #e0e0e0;
+  color: #888;
+  box-shadow: none;
+  min-height: 250px; /* 다른 카드들과 높이를 맞추기 위함 */
+  transition: all 0.2s ease-in-out;
+}
+
+.new-project-card:hover {
+  border-color: #365cff;
+  color: #365cff;
+  background-color: #f9faff;
+  transform: translateY(-4px); /* 호버 효과 */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* 호버 효과 */
+}
+
+.new-project-card .plus-icon {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.new-project-card .new-project-text {
+  font-weight: 500;
+}
+
+
+/* ===== 기존 프로젝트 카드 (심플 버전) ===== */
+.admin-project-card {
   background: #fff;
   border: 1px solid #e1e5e9;
   border-radius: 12px;
@@ -37,273 +70,64 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
+  min-height: 250px;
 }
 
-.admin-project-card:hover,
-.card:hover {
+.admin-project-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   border-color: #365cff;
 }
 
-/* ===== 카드 이미지 ===== */
-.card-media {
-  height: 180px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+.admin-project-card .card-icon-area {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  height: 120px; /* 아이콘/썸네일 영역 높이 */
+  background-color: #f8f9fa;
+  font-size: 3rem;
+  color: #ced4da;
 }
 
-.card-media img,
-.admin-project-card img {
+.admin-project-card .card-thumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.card:hover .card-media img,
-.admin-project-card:hover img {
-  transform: scale(1.05);
-}
-
-/* ===== 카드 본문 ===== */
-.card-body {
-  padding: 1.5rem;
+.admin-project-card .card-body {
+  padding: 1rem 1.25rem;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.card-title {
-  font-size: 1.25rem;
+.admin-project-card .card-title {
+  font-size: 1.1rem;
   font-weight: 600;
   color: #1a202c;
-  margin: 0 0 0.75rem 0;
-  line-height: 1.4;
+  margin-bottom: 0.5rem;
 }
 
-.card-desc {
-  color: #4a5568;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.card-meta {
+.admin-project-card .card-tags {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
+  margin-bottom: auto; /* 날짜를 하단에 고정시키기 위해 */
+  padding-top: 0.5rem;
+}
+
+.admin-project-card .tag {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  background-color: #eef2ff;
+  color: #4338ca;
+  border-radius: 999px;
+}
+
+.admin-project-card .card-date {
+  font-size: 0.8rem;
   color: #718096;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
-.card-meta span {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-/* ===== 카드 액션 버튼 ===== */
-.card-actions {
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid #f1f5f9;
-  background: #fafbfc;
-  margin-top: auto;
-}
-
-.btn-edit,
-.btn-delete {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.btn-edit {
-  background: #365cff;
-  color: #fff;
-}
-
-.btn-edit:hover {
-  background: #2c4fd6;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(54, 92, 255, 0.3);
-}
-
-.btn-delete {
-  background: #e53e3e;
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background: #c53030;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
-}
-
-/* ===== 새 프로젝트 등록 버튼 ===== */
-.actions {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: #fff;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  background: linear-gradient(135deg, #218838, #1e7e34);
-  color: #fff;
-  text-decoration: none;
-}
-
-/* ===== 빈 상태 메시지 ===== */
-.note {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: #718096;
-  font-size: 1.1rem;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 2px dashed #cbd5e0;
-}
-
-/* ===== 로딩 상태 ===== */
-.loading {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: #365cff;
-  font-size: 1.1rem;
-}
-
-.loading::after {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #365cff;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-  margin-left: 0.5rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ===== 반응형 디자인 ===== */
-@media (max-width: 1024px) {
-  #adminList {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
-  }
-  
-  .admin-container {
-    padding: 1.5rem;
-    margin: 1rem auto;
-  }
-}
-
-@media (max-width: 768px) {
-  #adminList {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  
-  .admin-container {
-    padding: 1rem;
-    margin: 0.5rem auto;
-  }
-  
-  .admin-container h1 {
-    font-size: 1.5rem;
-  }
-  
-  .card-actions {
-    flex-direction: column;
-  }
-  
-  .btn-edit,
-  .btn-delete {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  #adminList {
-    grid-template-columns: 1fr;
-  }
-  
-  .card-media {
-    height: 160px;
-  }
-  
-  .card-body {
-    padding: 1rem;
-  }
-  
-  .card-actions {
-    padding: 1rem;
-  }
-}
-
-/* ===== 애니메이션 효과 ===== */
-.card {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
-.card:nth-child(4) { animation-delay: 0.4s; }
-.card:nth-child(5) { animation-delay: 0.5s; }
-.card:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ... (케밥 메뉴 등 추가 스타일은 JS 수정 후 진행) ... */

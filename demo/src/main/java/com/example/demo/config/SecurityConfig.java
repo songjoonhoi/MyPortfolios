@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // HttpMethod를 사용하기 위해 import 합니다.
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -35,15 +36,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                // 정적 리소스와 API는 모두 허용
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/uploads/**", "/api/**").permitAll()
-                // H2 콘솔은 관리자만 접근
-                .requestMatchers("/h2-console/**").hasRole("ADMIN")
-                // 공개 페이지는 모두 허용
-                .requestMatchers("/", "/projects/**", "/folio/**").permitAll()
-                // 관리자 페이지는 ADMIN 권한 필요
-                .requestMatchers("/admin/**", "/admin-list").hasRole("ADMIN")
-                // 그 외 모든 요청은 인증 필요
+                // ▼▼▼ [수정된 핵심 부분] ▼▼▼
+                // 모든 사용자가 볼 수 있는 페이지와 리소스는 전부 허용 (permitAll)
+                .requestMatchers("/", "/folio/**", "/detail/**", "/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
+                // 데이터를 조회(GET)하는 API는 전부 허용
+                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                // 관리자 페이지는 'ADMIN' 역할이 반드시 필요
+                .requestMatchers("/admin/**", "/h2-console/**").hasRole("ADMIN")
+                // 위에서 지정한 규칙 외의 모든 요청은 로그인해야만 가능
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -55,11 +55,14 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
-            // CSRF 보호를 API와 H2 콘솔에 대해 비활성화
+            // CSRF 보호를 API와 H2 콘솔에 대해 비활성화 (API 테스트 및 H2 콘솔 사용을 위함)
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/api/**")
+                .ignoringRequestMatchers("/api/**", "/h2-console/**")
             )
-            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+            // H2 콘솔을 iframe 내에서 표시할 수 있도록 허용
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+            );
 
         return http.build();
     }

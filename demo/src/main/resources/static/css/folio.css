@@ -58,3 +58,14 @@
   font-size: 0.95rem;
   color: #333;
 }
+
+.card-link {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit; /* 카드 텍스트 색상을 부모 요소와 동일하게 설정 */
+}
+
+.card-link .card:hover {
+    transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 위로 이동하는 효과 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    transition: all 0.2s ease-in-out;
+}

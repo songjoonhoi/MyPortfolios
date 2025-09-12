@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ApiController {
-    
+
     private final ProjectService projectService;
     private final FolioService folioService;
 
@@ -29,28 +29,26 @@ public class ApiController {
             @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "latest") String sort) {
-        
+
         try {
             Sort sortOrder = switch (sort) {
                 case "popular" -> Sort.by("likes").descending();
                 case "title" -> Sort.by("title").ascending();
                 default -> Sort.by("createdAt").descending();
             };
-            
+
             Pageable pageable = PageRequest.of(page, size, sortOrder);
-            
+
             Page<ProjectDto> result;
             if (search.trim().isEmpty()) {
                 result = projectService.getAllProjects(pageable);
             } else {
                 result = projectService.searchProjects(search, pageable);
             }
-            
+
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            // 빈 페이지 반환
-            Page<ProjectDto> emptyPage = Page.empty();
-            return ResponseEntity.ok(emptyPage);
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -85,7 +83,7 @@ public class ApiController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     @DeleteMapping("/portfolios/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         try {
@@ -102,25 +100,22 @@ public class ApiController {
             FolioDto folio = folioService.getFolio(id);
             return ResponseEntity.ok(folio);
         } catch (Exception e) {
-            // 기본 프로필 반환
-            FolioDto defaultFolio = FolioDto.builder()
-                    .id(1L)
-                    .name("개발자")
-                    .bio("안녕하세요! 개발자입니다.")
-                    .profileImg("https://via.placeholder.com/200x200/365cff/ffffff?text=Profile")
-                    .skills("Java, Spring Boot")
-                    .build();
-            return ResponseEntity.ok(defaultFolio);
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/folios")
-    public ResponseEntity<FolioDto> createOrUpdateFolio(@Valid @RequestBody FolioDto dto) {
+    @PostMapping("/folios/{id}")
+    public ResponseEntity<FolioDto> createOrUpdateFolio(
+            @PathVariable Long id,
+            @Valid @RequestBody FolioDto dto) {
         try {
-            dto.setId(1L); 
-            Folio saved = folioService.createOrUpdateFolio(dto);
-            return ResponseEntity.ok(folioService.getFolio(saved.getId()));
+            // 항상 ID 1번을 수정하도록 강제
+            dto.setId(1L);
+            Folio savedFolio = folioService.createOrUpdateFolio(dto);
+            return ResponseEntity.ok(folioService.getFolio(savedFolio.getId()));
         } catch (Exception e) {
+            // 서버 로그에 에러 기록 (실제 운영 시 중요)
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

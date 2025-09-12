@@ -4,60 +4,53 @@
   <meta charset="UTF-8"/>
   <title>My Portfolio - Detail</title>
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/css/detail.css}"/>
 </head>
 <body data-page="detail">
 
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <section class="hero hero--slim">
-    <div class="container hero-inner">
-      <h1 id="detailTitle">프로젝트 상세</h1>
-      <p class="hero-sub">선택한 프로젝트의 세부 정보를 확인하세요.</p>
+  <header class="detail-header container">
+    <h1 id="projectTitle">[프로젝트 제목]</h1>
+    <p id="projectDescription" class="project-summary">[프로젝트 한 줄 요약]</p>
+    <div class="project-meta">
+      <span id="projectCreator"></span> | 
+      <span id="projectDate"></span> | 
+      <a id="projectLink" href="#" target="_blank">프로젝트 링크</a>
     </div>
-  </section>
-
-  <section class="container detailband">
-    <div class="detailband-inner">
-      <figure class="detail-cover">
-        <img id="detailCover" src="" alt="프로젝트 대표 이미지"/>
-      </figure>
-      <div class="detail-body">
-        <h2 id="detailProjectTitle"></h2>
-        <p id="detailDesc" class="modal-desc"></p>
-        <div class="modal-meta">
-          <span id="detailCreator"></span>
-          <span id="detailDate"></span>
-          <span id="detailLikes"></span>
-        </div>
-        <div id="detailTags" class="tech-cloud"></div>
-        <div class="modal-actions">
-          <a id="detailLink" href="#" class="btn primary" target="_blank">원본 보기</a>
-        </div>
+    <div id="projectTags" class="tech-cloud">
       </div>
-    </div>
-  </section>
+  </header>
+  <main class="case-study-container container">
+    <section class="case-study-section">
+      <h2 class="case-study-title">1. Introduction</h2>
+      <div id="projectIntroduction" class="case-study-content"></div>
+    </section>
+    
+    <section class="case-study-section">
+      <h2 class="case-study-title">2. Problem</h2>
+      <div id="projectProblem" class="case-study-content"></div>
+    </section>
 
+    <section class="case-study-section">
+      <h2 class="case-study-title">3. Roles & Contribution</h2>
+      <div id="projectRoles" class="case-study-content"></div>
+    </section>
+
+    <section class="case-study-section">
+      <h2 class="case-study-title">4. Result & Review</h2>
+      <div id="projectResult" class="case-study-content"></div>
+    </section>
+  </main>
   <section class="container detail-gallery">
     <h3>프로젝트 갤러리</h3>
-    <div id="galleryGrid" class="grid"></div>
+    <div id="galleryGrid"></div>
   </section>
 
   <dialog id="imageModal" class="image-modal">
     <button id="modalClose" class="modal-close">&times;</button>
-    <button id="modalPrev" class="modal-nav prev">&#10094;</button>
     <img id="modalImage" src="" alt="확대된 갤러리 이미지"/>
-    <button id="modalNext" class="modal-nav next">&#10095;</button>
   </dialog>
-
-  <section id="section-projects" class="container grid-wrap">
-    <h3>다른 프로젝트도 보기</h3>
-    <div id="grid" class="grid" aria-busy="false"></div>
-    <div class="actions">
-      <button id="btnLoadMore" class="btn primary">더보기</button>
-    </div>
-  </section>
-
-  <button id="btnToTop" class="fab hidden" aria-label="맨 위로">↑</button>
 
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 

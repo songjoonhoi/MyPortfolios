@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>관리자 - 자기소개 수정</title>
   <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
@@ -12,15 +13,16 @@
     <h1>자기소개 수정</h1>
 
     <section class="section">
+      <h2>기본 정보</h2>
       <form id="folioForm">
         <input type="hidden" id="folioId" value="1" />
         <label for="name">이름</label>
         <input type="text" id="name" name="name" required />
 
         <label for="bio">자기소개</label>
-        <textarea id="bio" name="bio" required></textarea>
+        <textarea id="bio" name="bio" required placeholder="공개 페이지에 표시될 자기소개를 입력해주세요."></textarea>
 
-        <label for="skills">기술 스택 (쉼표 구분)</label>
+        <label for="skills">기술 스택 (쉼표로 구분)</label>
         <input type="text" id="skills" name="skills" placeholder="예: Java, Spring Boot, AWS" />
 
         <label for="profileFile">프로필 이미지</label>
@@ -29,6 +31,26 @@
       </form>
     </section>
 
+    <hr />
+
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>학력</h2>
+        <button id="addEducationBtn" type="button" class="btn-add">+ 학력 추가</button>
+      </div>
+      <div id="educationsContainer">
+        </div>
+    </section>
+    <hr />
+
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>경력</h2>
+        <button id="addCareerBtn" type="button" class="btn-add">+ 경력 추가</button>
+      </div>
+      <div id="careersContainer">
+        </div>
+    </section>
     <hr />
 
     <button id="submitBtn" class="btn-submit">수정 완료</button>

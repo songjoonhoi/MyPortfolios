@@ -1,98 +1,59 @@
--- ===============================
--- 개인 Folio (자기소개) - 기본 이미지 사용 안함
--- ===============================
+-- H2 DB에서는 기본적으로 테이블과 컬럼 이름이 대문자로 처리되므로, 명시적으로 소문자를 사용하려면 따옴표로 감싸야 할 수 있습니다.
+-- 하지만 Spring Boot + JPA 기본 설정에서는 자동 변환되므로 대부분의 경우 문제가 없습니다.
+
+-- 개인 Folio (자기소개) - 프로필 이미지는 비워두고, 관리자 페이지에서 업로드하여 테스트합니다.
 INSERT INTO folios (name, bio, profile_img, skills)
 VALUES ('김개발자',
         'Java Spring Boot를 활용한 백엔드 개발자입니다. 문제 해결을 좋아하며, 사용자 중심의 서비스 개발에 관심이 많습니다.',
-        '',
+        '', -- profile_img는 초기에는 비워둡니다.
         'Java, Spring Boot, Spring Security, JPA, MySQL, JavaScript, HTML/CSS, Git, AWS');
 
--- ===============================
--- 개인 Projects (포트폴리오) - 기본 이미지 사용 안함
--- ===============================
-INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at)
+-- 개인 Projects (포트폴리오)
+-- cover_url, image_url 등 이미지 경로는 비워두고 관리자 페이지에서 업로드하여 테스트합니다.
+INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at, introduction, problem, roles, result)
 VALUES ('개인 포트폴리오 웹사이트', '김개발자',
-        'Spring Boot와 JPA를 활용하여 개발한 개인 포트폴리오 사이트입니다. 프로젝트 관리 기능과 관리자 페이지를 구현했으며, 반응형 웹 디자인을 적용했습니다.',
-        '',
-        'https://github.com/yourusername/portfolio',
-        15,
-        CURRENT_DATE);
+        'Spring Boot와 JPA를 활용하여 개발한 개인 포트폴리오 사이트입니다. 프로젝트 관리 기능과 관리자 페이지를 구현했습니다.',
+        '', 'https://github.com/your-id/portfolio', 15, CURRENT_DATE,
+        '개발자로서 저의 프로젝트 경험과 기술 스택을 효과적으로 보여줄 수 있는 개인화된 공간이 필요했습니다. 이 프로젝트는 Spring Boot 기반의 웹 애플리케이션으로, 저만의 포트폴리오를 직접 구축하고 운영하는 것을 목표로 합니다.',
+        '기존의 이력서나 GitHub만으로는 프로젝트의 배경, 고민의 과정, 그리고 최종 성과를 충분히 전달하기 어려웠습니다. 각 프로젝트의 스토리를 담아낼 수 있는 구조화된 포트폴리오 플랫폼이 부재하다는 문제점을 해결하고자 했습니다.',
+        '- **백엔드 개발**: Spring Boot, Spring Security, JPA를 사용한 REST API 설계 및 구현\n- **프론트엔드 개발**: Thymeleaf, Vanilla JavaScript를 사용한 동적 UI 구현\n- **데이터베이스**: H2(개발), MySQL(운영) 설계 및 구축\n- **배포 및 인프라**: AWS EC2, RDS를 활용한 클라우드 배포 및 Nginx 설정',
+        '프로젝트 등록부터 상세 페이지 조회까지 원활하게 작동하는 포트폴리오 웹사이트를 완성했습니다. 이 프로젝트를 통해 Spring Boot 생태계에 대한 깊은 이해와 풀스택 개발 경험을 쌓을 수 있었습니다. 향후 CI/CD 파이프라인을 구축하여 개발 및 배포 자동화를 구현할 계획입니다.');
 
-INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at)
+INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at, introduction, problem, roles, result)
 VALUES ('Spring Boot 게시판 시스템', '김개발자',
         'Spring Security를 활용한 인증/인가 시스템과 CRUD 기능을 갖춘 게시판입니다. 페이징, 검색, 파일 업로드 기능을 구현했습니다.',
-        '',
-        'https://github.com/yourusername/board-system',
-        23,
-        DATEADD('DAY', -30, CURRENT_DATE));
+        '', 'https://github.com/your-id/board', 23, DATEADD('DAY', -30, CURRENT_DATE),
+        '웹 개발의 가장 기본적인 기능인 게시판을 Spring Boot를 사용하여 처음부터 끝까지 구현한 프로젝트입니다. 사용자 인증, 게시글 관리, 파일 첨부 등 핵심적인 웹 애플리케이션 기능을 학습하는 것을 목표로 했습니다.',
+        '단순히 기능만 구현하는 것을 넘어, Spring Security를 통한 안전한 인증/인가 처리와 대용량 데이터 처리를 위한 페이징 기술의 필요성을 느꼈습니다. 또한, 실무적인 파일 업로드 처리 방식을 학습하고자 했습니다.',
+        '- **인증/인가**: Spring Security를 이용한 로그인, 회원가입, 권한 관리 기능 구현\n- **핵심 기능**: JPA를 활용한 게시글 CRUD, 페이징 및 검색 기능 구현\n- **파일 처리**: 로컬 서버 및 클라우드(S3) 환경을 고려한 파일 업로드/다운로드 기능 설계',
+        '보안과 성능을 고려한 웹 게시판의 기본 구조를 성공적으로 구현했습니다. 특히 Spring Security의 작동 원리를 깊이 이해하게 되었고, 페이징 API 설계 능력을 향상시킬 수 있었습니다. 이 경험은 다른 웹 서비스 개발의 튼튼한 기반이 되었습니다.');
 
-INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at)
-VALUES ('REST API 서버 프로젝트', '김개발자',
-        'RESTful API 설계 원칙을 적용하여 개발한 백엔드 서버입니다. JWT 토큰 기반 인증과 API 문서화를 구현했습니다.',
-        '',
-        'https://github.com/yourusername/rest-api',
-        18,
-        DATEADD('DAY', -60, CURRENT_DATE));
-
-INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at)
-VALUES ('Java 알고리즘 스터디', '김개발자',
-        '코딩테스트 대비를 위한 알고리즘 문제 풀이 저장소입니다. 백준, 프로그래머스 문제를 Java로 해결하고 정리했습니다.',
-        '',
-        'https://github.com/yourusername/algorithm-study',
-        31,
-        DATEADD('DAY', -90, CURRENT_DATE));
-
--- ===============================
 -- Project Tags
--- ===============================
 INSERT INTO project_tags (project_id, tags) VALUES (1, 'Spring Boot');
 INSERT INTO project_tags (project_id, tags) VALUES (1, 'JPA');
 INSERT INTO project_tags (project_id, tags) VALUES (1, 'Thymeleaf');
-INSERT INTO project_tags (project_id, tags) VALUES (1, 'JavaScript');
 
 INSERT INTO project_tags (project_id, tags) VALUES (2, 'Spring Boot');
 INSERT INTO project_tags (project_id, tags) VALUES (2, 'Spring Security');
 INSERT INTO project_tags (project_id, tags) VALUES (2, 'MySQL');
-INSERT INTO project_tags (project_id, tags) VALUES (2, 'JPA');
 
-INSERT INTO project_tags (project_id, tags) VALUES (3, 'Spring Boot');
-INSERT INTO project_tags (project_id, tags) VALUES (3, 'REST API');
-INSERT INTO project_tags (project_id, tags) VALUES (3, 'JWT');
-INSERT INTO project_tags (project_id, tags) VALUES (3, 'Swagger');
+-- Project Details (상세 이미지/설명)
+INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '메인 페이지', '프로젝트 목록과 검색 기능이 있는 메인 화면', '');
+INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '프로젝트 상세 페이지', '개별 프로젝트의 상세 정보와 갤러리 기능', '');
+INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '관리자 페이지', '프로젝트 등록/수정/삭제가 가능한 관리자 인터페이스', '');
 
-INSERT INTO project_tags (project_id, tags) VALUES (4, 'Java');
-INSERT INTO project_tags (project_id, tags) VALUES (4, 'Algorithm');
-INSERT INTO project_tags (project_id, tags) VALUES (4, 'Data Structure');
+INSERT INTO project_details (project_id, title, description, image_url) VALUES (2, '게시판 목록', 'Bootstrap을 활용한 반응형 게시판 목록 화면', '');
+INSERT INTO project_details (project_id, title, description, image_url) VALUES (2, '게시글 작성', '파일 업로드와 에디터가 포함된 게시글 작성 폼', '');
+
+
 
 -- ===============================
--- Project Details (상세 이미지/설명) - 기본 이미지 사용 안함
+-- Folio Educations & Careers
 -- ===============================
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (1, '메인 페이지', '프로젝트 목록과 검색 기능이 있는 메인 화면', '');
+INSERT INTO educations (folio_id, period, title, subtitle) VALUES
+(1, '2015.03 - 2019.02', '서울대학교 컴퓨터공학과', '학사'),
+(1, '2019.03 - 2021.01', '카이스트 경영대학', '지식경영프로그램 석사');
 
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (1, '프로젝트 상세 페이지', '개별 프로젝트의 상세 정보와 갤러리 기능', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (1, '관리자 페이지', '프로젝트 등록/수정/삭제가 가능한 관리자 인터페이스', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (2, '게시판 목록', 'Bootstrap을 활용한 반응형 게시판 목록 화면', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (2, '게시글 작성', '파일 업로드와 에디터가 포함된 게시글 작성 폼', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (2, '로그인 시스템', 'Spring Security를 활용한 로그인/회원가입 기능', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (3, 'API 문서', 'Swagger UI를 통한 REST API 문서화', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (3, '데이터베이스 설계', 'ERD와 테이블 구조 설계도', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (4, '알고리즘 풀이', '문제별 해결 과정과 코드 설명', '');
-
-INSERT INTO project_details (project_id, title, description, image_url)
-VALUES (4, '성능 분석', '시간복잡도와 공간복잡도 분석 결과', '');
+INSERT INTO careers (folio_id, period, title, subtitle) VALUES
+(1, '2021.05 - 현재', 'XYZ 스타트업', 'CTO'),
+(1, '2019.01 - 2021.04', 'ABC 스타트업', '백엔드 개발자');

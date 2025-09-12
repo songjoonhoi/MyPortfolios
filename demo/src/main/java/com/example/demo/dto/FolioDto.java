@@ -1,10 +1,9 @@
 package com.example.demo.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +20,12 @@ public class FolioDto {
 
     private String profileImg;
     private String skills;
+
+    // ▼▼▼ [신규] DTO 목록 필드 추가 ▼▼▼
+    @Builder.Default
+    private List<EducationDto> educations = new ArrayList<>();
+
+    @Builder.Default
+    private List<CareerDto> careers = new ArrayList<>();
+    // ▲▲▲ [신규] DTO 목록 필드 추가 ▲▲▲
 }

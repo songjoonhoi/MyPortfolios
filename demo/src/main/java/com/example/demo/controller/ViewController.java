@@ -30,6 +30,7 @@ public class ViewController {
     @GetMapping("/projects/{id}")
     public String projectDetail(@PathVariable Long id, Model model) {
         model.addAttribute("project", projectService.getProjectById(id));
+        model.addAttribute("folio", folioService.getFolio(1L)); 
         return "detail";
     }
 

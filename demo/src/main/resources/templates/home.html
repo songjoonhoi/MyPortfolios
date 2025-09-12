@@ -4,39 +4,20 @@
   <meta charset="UTF-8"/>
   <title>My Portfolio - Home</title>
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
 <body data-page="home">
 
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <section class="hero">
+  <section class="hero hero--simple">
     <div class="container hero-inner">
-      <h1>나의 프로젝트</h1>
-      <p class="hero-sub">제가 진행한 프로젝트들을 소개합니다.</p>
+      <h1>Projects</h1>
+      <p class="hero-sub">스크롤을 내려 각 프로젝트의 스토리를 확인해보세요.</p>
     </div>
   </section>
-
-  <div class="container toolbar">
-    <div class="toolbar-inner">
-      <input id="searchInput" type="text" placeholder="검색어 입력..." />
-      <select id="sortSelect">
-        <option value="latest" selected>최신순</option>
-        <option value="popular">인기순</option>
-        <option value="title">제목순</option>
-      </select>
-      <button id="btnClear" class="btn ghost">초기화</button>
-    </div>
-  </div>
-
-  <section id="section-projects" class="container grid-wrap">
-    <div id="grid" class="grid" aria-busy="false"></div>
-    <div class="actions">
-      <button id="btnLoadMore" class="btn primary">더보기</button>
-    </div>
-  </section>
-
-  <button id="btnToTop" class="fab hidden" aria-label="맨 위로">↑</button>
-
+  <main id="project-showcase" class="project-showcase-container">
+    </main>
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
   <script th:src="@{/js/home.js}"></script>
