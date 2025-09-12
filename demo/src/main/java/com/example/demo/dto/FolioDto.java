@@ -21,11 +21,14 @@ public class FolioDto {
     private String profileImg;
     private String skills;
 
-    // ▼▼▼ [신규] DTO 목록 필드 추가 ▼▼▼
+    // DTO 목록 필드
     @Builder.Default
     private List<EducationDto> educations = new ArrayList<>();
 
     @Builder.Default
     private List<CareerDto> careers = new ArrayList<>();
-    // ▲▲▲ [신규] DTO 목록 필드 추가 ▲▲▲
+
+    // ▼▼▼ 새로 추가: Expertise DTO 목록 ▼▼▼
+    @Builder.Default
+    private List<ExpertiseDto> expertises = new ArrayList<>();
 }

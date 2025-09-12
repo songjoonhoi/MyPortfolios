@@ -27,14 +27,17 @@ public class Folio {
     @Column(columnDefinition = "TEXT")
     private String skills; // 기술 스택(Json/String으로 저장)
 
-    // ▼▼▼ [신규] 연관 관계 매핑 추가 ▼▼▼
-    // Folio가 저장, 수정, 삭제될 때 Education 목록도 함께 처리되도록 cascade 옵션 설정
+    // 연관 관계 매핑
     @OneToMany(mappedBy = "folio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @Builder.Default // Lombok Builder 사용 시 필드 기본값 초기화
+    @Builder.Default
     private List<Education> educations = new ArrayList<>();
 
     @OneToMany(mappedBy = "folio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Career> careers = new ArrayList<>();
-    // ▲▲▲ [신규] 연관 관계 매핑 추가 ▲▲▲
+
+    // ▼▼▼ 새로 추가: Expertise 연관 관계 ▼▼▼
+    @OneToMany(mappedBy = "folio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<Expertise> expertises = new ArrayList<>();
 }

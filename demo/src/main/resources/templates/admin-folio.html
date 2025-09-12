@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>관리자 - 자기소개 수정</title>
   <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
@@ -39,8 +39,9 @@
         <button id="addEducationBtn" type="button" class="btn-add">+ 학력 추가</button>
       </div>
       <div id="educationsContainer">
-        </div>
+      </div>
     </section>
+
     <hr />
 
     <section class="section">
@@ -49,8 +50,21 @@
         <button id="addCareerBtn" type="button" class="btn-add">+ 경력 추가</button>
       </div>
       <div id="careersContainer">
-        </div>
+      </div>
     </section>
+
+    <hr />
+
+    <!-- ▼▼▼ 새로 추가: 전문분야 섹션 ▼▼▼ -->
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>전문 분야</h2>
+        <button id="addExpertiseBtn" type="button" class="btn-add">+ 전문분야 추가</button>
+      </div>
+      <div id="expertisesContainer">
+      </div>
+    </section>
+
     <hr />
 
     <button id="submitBtn" class="btn-submit">수정 완료</button>

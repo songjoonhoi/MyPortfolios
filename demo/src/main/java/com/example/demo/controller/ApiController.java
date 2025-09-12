@@ -95,14 +95,14 @@ public class ApiController {
     }
 
     @GetMapping("/folios/{id}")
-    public ResponseEntity<FolioDto> getFolio(@PathVariable Long id) {
-        try {
-            FolioDto folio = folioService.getFolio(id);
-            return ResponseEntity.ok(folio);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+public ResponseEntity<FolioDto> getFolio(@PathVariable Long id) {
+    try {
+        FolioDto folio = folioService.getFolio(id); // 공개페이지용 (기본값 제공)
+        return ResponseEntity.ok(folio);
+    } catch (Exception e) {
+        return ResponseEntity.notFound().build();
     }
+}
 
     @PostMapping("/folios/{id}")
     public ResponseEntity<FolioDto> createOrUpdateFolio(
@@ -119,4 +119,16 @@ public class ApiController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    // ▼▼▼ 새로 추가되는 관리페이지용 API ▼▼▼
+@GetMapping("/admin/folios/{id}")
+public ResponseEntity<FolioDto> getFolioForAdmin(@PathVariable Long id) {
+    try {
+        FolioDto folio = folioService.getFolioForAdmin(id); // 관리페이지용 (빈 값 제공)
+        return ResponseEntity.ok(folio);
+    } catch (Exception e) {
+        return ResponseEntity.notFound().build();
+    }
+}
+
 }

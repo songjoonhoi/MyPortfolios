@@ -3,13 +3,17 @@ package com.example.demo.service;
 import com.example.demo.dao.FolioRepository;
 import com.example.demo.dto.CareerDto;
 import com.example.demo.dto.EducationDto;
+import com.example.demo.dto.ExpertiseDto;
 import com.example.demo.dto.FolioDto;
 import com.example.demo.entity.Career;
 import com.example.demo.entity.Education;
+import com.example.demo.entity.Expertise;
 import com.example.demo.entity.Folio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,21 +22,46 @@ public class FolioService {
 
     private final FolioRepository folioRepository;
 
-    // ID로 자기소개 조회
+    // ID로 자기소개 조회 (관리페이지용)
+    public FolioDto getFolioForAdmin(Long id){
+        return folioRepository.findById(id)
+                .map(this::toDto)
+                .orElse(createEmptyFolioDto()); // 빈 DTO 반환
+    }
+
+    // ID로 자기소개 조회 (공개페이지용)
     public FolioDto getFolio(Long id){
         return folioRepository.findById(id)
                 .map(this::toDto)
-                .orElse(createDefaultFolioDto()); // 없으면 기본 DTO 반환
+                .orElse(createDefaultFolioDto()); // 기본 DTO 반환
     }
 
-    // 기본 자기소개 DTO 생성
+    // 빈 자기소개 DTO 생성 (관리페이지용)
+    private FolioDto createEmptyFolioDto() {
+        return FolioDto.builder()
+                .id(1L)
+                .name("")
+                .bio("")
+                .profileImg("")
+                .skills("")
+                .build(); // 빈 리스트는 @Builder.Default로 자동 초기화
+    }
+
+    // 기본 자기소개 DTO 생성 (공개페이지용)
     private FolioDto createDefaultFolioDto() {
+        List<ExpertiseDto> defaultExpertises = List.of(
+            ExpertiseDto.builder().description("AI 기반 시스템 설계 및 개발").build(),
+            ExpertiseDto.builder().description("복잡 CRUD 도메인의 동적 모듈").build(),
+            ExpertiseDto.builder().description("DevOps 기반 확장 가능한 클라우드 인프라 구축").build()
+        );
+        
         return FolioDto.builder()
                 .id(1L)
                 .name("개발자")
                 .bio("안녕하세요! 개발자입니다.")
                 .profileImg("https://via.placeholder.com/200x200/365cff/ffffff?text=Profile")
                 .skills("Java, Spring Boot")
+                .expertises(defaultExpertises)
                 .build();
     }
 
@@ -47,7 +76,7 @@ public class FolioService {
         folio.setSkills(dto.getSkills());
         folio.setProfileImg(dto.getProfileImg());
 
-        // 기존의 Education/Career 목록을 비우고 DTO의 새 목록으로 채움
+        // 기존 목록들을 비우고 DTO의 새 목록으로 채움
         folio.getEducations().clear();
         if (dto.getEducations() != null) {
             dto.getEducations().forEach(eduDto -> {
@@ -55,7 +84,7 @@ public class FolioService {
                     .period(eduDto.getPeriod())
                     .title(eduDto.getTitle())
                     .subtitle(eduDto.getSubtitle())
-                    .folio(folio) // 연관관계 설정
+                    .folio(folio)
                     .build();
                 folio.getEducations().add(edu);
             });
@@ -68,9 +97,21 @@ public class FolioService {
                     .period(carDto.getPeriod())
                     .title(carDto.getTitle())
                     .subtitle(carDto.getSubtitle())
-                    .folio(folio) // 연관관계 설정
+                    .folio(folio)
                     .build();
                 folio.getCareers().add(car);
+            });
+        }
+
+        // ▼▼▼ 새로 추가: Expertise 처리 ▼▼▼
+        folio.getExpertises().clear();
+        if (dto.getExpertises() != null) {
+            dto.getExpertises().forEach(expDto -> {
+                Expertise exp = Expertise.builder()
+                    .description(expDto.getDescription())
+                    .folio(folio)
+                    .build();
+                folio.getExpertises().add(exp);
             });
         }
 
@@ -85,10 +126,9 @@ public class FolioService {
                 .bio(folio.getBio())
                 .profileImg(folio.getProfileImg())
                 .skills(folio.getSkills())
-                // ▼▼▼ [수정] Entity List를 DTO List로 변환 ▼▼▼
                 .educations(folio.getEducations().stream().map(this::toEducationDto).collect(Collectors.toList()))
                 .careers(folio.getCareers().stream().map(this::toCareerDto).collect(Collectors.toList()))
-                // ▲▲▲ [수정] Entity List를 DTO List로 변환 ▲▲▲
+                .expertises(folio.getExpertises().stream().map(this::toExpertiseDto).collect(Collectors.toList()))
                 .build();
     }
 
@@ -109,6 +149,14 @@ public class FolioService {
             .period(career.getPeriod())
             .title(career.getTitle())
             .subtitle(career.getSubtitle())
+            .build();
+    }
+
+    // ▼▼▼ 새로 추가: Expertise Entity -> DTO ▼▼▼
+    private ExpertiseDto toExpertiseDto(Expertise expertise) {
+        return ExpertiseDto.builder()
+            .id(expertise.getId())
+            .description(expertise.getDescription())
             .build();
     }
 }

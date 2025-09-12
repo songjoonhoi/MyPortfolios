@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.service.FolioService;
 import com.example.demo.service.ProjectService;
+
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,17 +38,20 @@ public class ViewController {
 
     // 자기소개 페이지 - 데이터를 모델에 추가
     @GetMapping("/folio/{id}")
-    public String folio(@PathVariable Long id, Model model) {
-        try {
-            // 자기소개 데이터를 모델에 추가하여 Thymeleaf에서 사용할 수 있도록 함
-            model.addAttribute("folio", folioService.getFolio(id));
-            return "folio";
-        } catch (Exception e) {
-            // 오류 발생 시 기본 데이터로 처리
-            model.addAttribute("folio", folioService.getFolio(1L));
-            return "folio";
-        }
+public String folio(@PathVariable Long id, Model model, HttpServletResponse response) {
+    try {
+        // 캐시 방지 헤더 추가
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        
+        model.addAttribute("folio", folioService.getFolio(id));
+        return "folio";
+    } catch (Exception e) {
+        model.addAttribute("folio", folioService.getFolio(1L));
+        return "folio";
     }
+}
 
     // 관리자 등록/수정 
     @GetMapping("/admin")

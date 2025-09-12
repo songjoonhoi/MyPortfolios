@@ -1,114 +1,12 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio - 자기소개</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/folio.css}">
-</head>
-<body class="folio-page">
-    <!-- 헤더 포함 -->
-    <th:block th:replace="~{fragments/header :: header}"></th:block>
-
-    <!-- 메인 컨테이너 -->
-    <div class="folio-container">
-        <!-- 왼쪽 프로필 영역 -->
-        <div class="profile-section">
-            <!-- 기하학적 배경 패턴 -->
-            <div class="geometric-bg">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
-            
-            <!-- 프로필 컨텐츠 -->
-            <div class="profile-content">
-                <!-- 프로필 이미지 -->
-                <div class="profile-avatar">
-                    <img th:src="${folio.profileImg != null and folio.profileImg != '' ? folio.profileImg : '/img/profile-default.jpg'}" 
-                         alt="프로필 사진" 
-                         class="avatar-image">
-                </div>
-                
-                <!-- 기본 정보 -->
-                <h1 class="profile-name" th:text="${folio.name}">홍길동</h1>
-                
-                <!-- 연락처 정보 -->
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <span class="contact-icon">📧</span>
-                        <span>hong@example.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">📱</span>
-                        <span>010-1234-5678</span>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">🌐</span>
-                        <span>github.com/hong</span>
-                    </div>
-                </div>
-                
-                <!-- 자기소개 -->
-                <p class="profile-bio" th:text="${folio.bio}">
-                    안녕하세요! 개발자입니다.
-                </p>
-            </div>
-        </div>
-
-        <!-- 오른쪽 정보 영역 -->
-        <div class="info-section">
-            <!-- Education -->
-            <div class="info-block">
-                <h2 class="block-title">EDUCATION</h2>
-                <div class="block-content" th:if="${folio.educations != null and !folio.educations.isEmpty()}">
-                    <div class="info-item" th:each="edu : ${folio.educations}">
-                        <div class="item-period" th:text="${edu.period}">2015.03 - 2019.02</div>
-                        <div class="item-details">
-                            <h3 class="item-title" th:text="${edu.title}">서울대학교</h3>
-                            <p class="item-subtitle" th:text="${edu.subtitle}">컴퓨터공학과 | 학사</p>
-                        </div>
-                    </div>
-                </div>
-                <div th:unless="${folio.educations != null and !folio.educations.isEmpty()}" class="block-content">
-                    <div class="info-item">
-                        <div class="item-period">2015.03 - 2019.02</div>
-                        <div class="item-details">
-                            <h3 class="item-title">서울대학교 컴퓨터공학과</h3>
-                            <p class="item-subtitle">학사</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Career -->
-            <div class="info-block">
-                <h2 class="block-title">CAREER</h2>
-                <div class="block-content" th:if="${folio.careers != null and !folio.careers.isEmpty()}">
-                    <div class="info-item" th:each="career : ${folio.careers}">
-                        <div class="item-period" th:text="${career.period}">2021.05 - 현재</div>
-                        <div class="item-details">
-                            <h3 class="item-title" th:text="${career.title}">XYZ 스타트업</h3>
-                            <p class="item-subtitle" th:text="${career.subtitle}">CTO</p>
-                        </div>
-                    </div>
-                </div>
-                <div th:unless="${folio.careers != null and !folio.careers.isEmpty()}" class="block-content">
-                    <div class="info-item">
-                        <div class="item-period">2021.05 - 현재</div>
-                        <div class="item-details">
-                            <h3 class="item-title">XYZ 스타트업</h3>
-                            <p class="item-subtitle">CTO</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Expertise -->
+<!-- Expertise -->
             <div class="info-block">
                 <h2 class="block-title">EXPERTISE</h2>
-                <div class="block-content">
+                <div class="block-content" th:if="${folio.expertises != null and !folio.expertises.isEmpty()}">
+                    <div class="expertise-text">
+                        <p th:each="expertise : ${folio.expertises}" th:text="${expertise.description}">AI 기반 시스템 설계 및 개발</p>
+                    </div>
+                </div>
+                <div th:unless="${folio.expertises != null and !folio.expertises.isEmpty()}" class="block-content">
                     <div class="expertise-text">
                         <p>AI 기반 시스템 설계 및 개발</p>
                         <p>복잡 CRUD 도메인의 동적 모듈</p>
@@ -116,29 +14,3 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Skills -->
-            <div class="info-block">
-                <h2 class="block-title">SKILLS</h2>
-                <div class="block-content">
-                    <div class="skills-list" th:if="${folio.skills}">
-                        <span class="skill-item" th:each="skill : ${#strings.listSplit(folio.skills, ',')}" 
-                              th:text="${#strings.trim(skill)}">Spring</span>
-                    </div>
-                    <div th:unless="${folio.skills}" class="skills-list">
-                        <span class="skill-item">Spring Boot</span>
-                        <span class="skill-item">JavaScript</span>
-                        <span class="skill-item">AWS</span>
-                        <span class="skill-item">Docker</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 푸터 포함 -->
-    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
-
-    <script th:src="@{/js/folio.js}"></script>
-</body>
-</html>

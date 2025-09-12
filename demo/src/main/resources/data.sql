@@ -1,15 +1,27 @@
--- H2 DB에서는 기본적으로 테이블과 컬럼 이름이 대문자로 처리되므로, 명시적으로 소문자를 사용하려면 따옴표로 감싸야 할 수 있습니다.
--- 하지만 Spring Boot + JPA 기본 설정에서는 자동 변환되므로 대부분의 경우 문제가 없습니다.
-
--- 개인 Folio (자기소개) - 프로필 이미지는 비워두고, 관리자 페이지에서 업로드하여 테스트합니다.
+-- 개인 Folio (자기소개)
 INSERT INTO folios (name, bio, profile_img, skills)
 VALUES ('김개발자',
         'Java Spring Boot를 활용한 백엔드 개발자입니다. 문제 해결을 좋아하며, 사용자 중심의 서비스 개발에 관심이 많습니다.',
-        '', -- profile_img는 초기에는 비워둡니다.
+        '', 
         'Java, Spring Boot, Spring Security, JPA, MySQL, JavaScript, HTML/CSS, Git, AWS');
 
--- 개인 Projects (포트폴리오)
--- cover_url, image_url 등 이미지 경로는 비워두고 관리자 페이지에서 업로드하여 테스트합니다.
+-- 학력 데이터
+INSERT INTO educations (folio_id, period, title, subtitle) VALUES
+(1, '2015.03 - 2019.02', '서울대학교', '컴퓨터공학과 학사'),
+(1, '2019.03 - 2021.01', '카이스트', '경영대학 지식경영프로그램 석사');
+
+-- 경력 데이터
+INSERT INTO careers (folio_id, period, title, subtitle) VALUES
+(1, '2019.01 - 2021.04', 'ABC 스타트업', '백엔드 개발자'),
+(1, '2021.05 - 현재', 'XYZ 스타트업', 'CTO');
+
+-- ▼▼▼ 새로 추가: 전문분야 데이터 ▼▼▼
+INSERT INTO expertises (folio_id, description) VALUES
+(1, 'AI 기반 시스템 설계 및 개발'),
+(1, '복잡 CRUD 도메인의 동적 모듈'),
+(1, 'DevOps 기반 확장 가능한 클라우드 인프라 구축');
+
+-- 프로젝트 데이터 (기존과 동일)
 INSERT INTO projects (title, creator, description, cover_url, link, likes, created_at, introduction, problem, roles, result)
 VALUES ('개인 포트폴리오 웹사이트', '김개발자',
         'Spring Boot와 JPA를 활용하여 개발한 개인 포트폴리오 사이트입니다. 프로젝트 관리 기능과 관리자 페이지를 구현했습니다.',
@@ -37,23 +49,10 @@ INSERT INTO project_tags (project_id, tags) VALUES (2, 'Spring Boot');
 INSERT INTO project_tags (project_id, tags) VALUES (2, 'Spring Security');
 INSERT INTO project_tags (project_id, tags) VALUES (2, 'MySQL');
 
--- Project Details (상세 이미지/설명)
+-- Project Details
 INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '메인 페이지', '프로젝트 목록과 검색 기능이 있는 메인 화면', '');
 INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '프로젝트 상세 페이지', '개별 프로젝트의 상세 정보와 갤러리 기능', '');
 INSERT INTO project_details (project_id, title, description, image_url) VALUES (1, '관리자 페이지', '프로젝트 등록/수정/삭제가 가능한 관리자 인터페이스', '');
 
 INSERT INTO project_details (project_id, title, description, image_url) VALUES (2, '게시판 목록', 'Bootstrap을 활용한 반응형 게시판 목록 화면', '');
 INSERT INTO project_details (project_id, title, description, image_url) VALUES (2, '게시글 작성', '파일 업로드와 에디터가 포함된 게시글 작성 폼', '');
-
-
-
--- ===============================
--- Folio Educations & Careers
--- ===============================
-INSERT INTO educations (folio_id, period, title, subtitle) VALUES
-(1, '2015.03 - 2019.02', '서울대학교 컴퓨터공학과', '학사'),
-(1, '2019.03 - 2021.01', '카이스트 경영대학', '지식경영프로그램 석사');
-
-INSERT INTO careers (folio_id, period, title, subtitle) VALUES
-(1, '2021.05 - 현재', 'XYZ 스타트업', 'CTO'),
-(1, '2019.01 - 2021.04', 'ABC 스타트업', '백엔드 개발자');
