@@ -33,12 +33,11 @@ if (projectId) {
             $("#link").value = p.link || '';
             $("#tags").value = (p.tags || []).join(", ");
 
-            // ▼▼▼ [수정] 케이스 스터디 필드 채우기 ▼▼▼
+            // 케이스 스터디 필드 채우기
             $("#introduction").value = p.introduction || '';
             $("#problem").value = p.problem || '';
             $("#roles").value = p.roles || '';
             $("#result").value = p.result || '';
-            // ▲▲▲ [수정] 케이스 스터디 필드 채우기 ▲▲▲
 
             // 대표 이미지 미리보기 설정
             uploadedCoverUrl = p.coverUrl || '';
@@ -134,7 +133,63 @@ function addDetailForm(detail = { title: "", description: "", imageUrl: "" }) {
 
     // 상세 이미지 파일 변경 이벤트 처리
     container.querySelector(".detail-file").addEventListener("change", async (e) => {
-        // ... (대표 이미지 업로드 로직과 동일)
+        const file = e.target.files[0];
+        const previewImg = container.querySelector(".detail-preview");
+        
+        if (!file) {
+            previewImg.style.display = "none";
+            previewImg.src = "";
+            formState.imageUrl = "";
+            return;
+        }
+
+        // 파일 유효성 검사
+        if (!file.type.startsWith('image/')) {
+            alert("이미지 파일만 업로드 가능합니다.");
+            e.target.value = '';
+            return;
+        }
+        
+        if (file.size > 10 * 1024 * 1024) { // 10MB
+            alert("파일 크기는 10MB 이하로 업로드해주세요.");
+            e.target.value = '';
+            return;
+        }
+
+        try {
+            // 1. 프론트엔드에서 미리보기 구현
+            const reader = new FileReader();
+            reader.onload = ev => {
+                previewImg.src = ev.target.result;
+                previewImg.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+
+            // 2. 서버로 이미지 파일 업로드
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch("/api/uploads/images", { 
+                method: "POST", 
+                body: formData 
+            });
+
+            if (res.ok) {
+                formState.imageUrl = await res.text();
+                console.log("상세 이미지 업로드 성공:", formState.imageUrl);
+            } else {
+                const errorText = await res.text();
+                throw new Error(errorText);
+            }
+        } catch (error) {
+            console.error("이미지 업로드 오류:", error);
+            alert(`이미지 업로드에 실패했습니다: ${error.message}`);
+            
+            // 업로드 실패 시 미리보기도 제거
+            previewImg.style.display = "none";
+            previewImg.src = "";
+            formState.imageUrl = "";
+            e.target.value = '';
+        }
     });
 }
 
@@ -147,24 +202,20 @@ $("#submitBtn")?.addEventListener("click", async () => {
     const titleEl = $("#title");
     const creatorEl = $("#creator");
     const descriptionEl = $("#description");
-    // ▼▼▼ [수정] 케이스 스터디 폼 요소 가져오기 ▼▼▼
     const introductionEl = $("#introduction");
     const problemEl = $("#problem");
     const rolesEl = $("#roles");
     const resultEl = $("#result");
-    // ▲▲▲ [수정] 케이스 스터디 폼 요소 가져오기 ▲▲▲
 
     // 폼 유효성 검사
     if (!titleEl.value.trim()) return alert("프로젝트 제목을 입력해주세요.");
     if (!creatorEl.value.trim()) return alert("작성자를 입력해주세요.");
     if (!descriptionEl.value.trim()) return alert("프로젝트 한 줄 요약을 입력해주세요.");
     if (!uploadedCoverUrl) return alert("대표 이미지를 업로드해주세요!");
-    // ▼▼▼ [수정] 케이스 스터디 필드 유효성 검사 추가 ▼▼▼
     if (!introductionEl.value.trim()) return alert("프로젝트 도입부를 입력해주세요.");
     if (!problemEl.value.trim()) return alert("문제 정의를 입력해주세요.");
     if (!rolesEl.value.trim()) return alert("역할 및 기여를 입력해주세요.");
     if (!resultEl.value.trim()) return alert("결과 및 회고를 입력해주세요.");
-    // ▲▲▲ [수정] 케이스 스터디 필드 유효성 검사 추가 ▲▲▲
 
     try {
         // 서버로 전송할 데이터 객체 생성
@@ -176,12 +227,10 @@ $("#submitBtn")?.addEventListener("click", async () => {
             coverUrl: uploadedCoverUrl,
             link: $("#link").value.trim(),
             tags: $("#tags").value.split(",").map(t => t.trim()).filter(Boolean),
-            // ▼▼▼ [수정] 케이스 스터디 데이터 추가 ▼▼▼
             introduction: introductionEl.value.trim(),
             problem: problemEl.value.trim(),
             roles: rolesEl.value.trim(),
             result: resultEl.value.trim(),
-            // ▲▲▲ [수정] 케이스 스터디 데이터 추가 ▲▲▲
             details: detailForms
         };
 
