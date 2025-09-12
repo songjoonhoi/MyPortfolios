@@ -1,42 +1,80 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/folio.css">
-    <link rel="stylesheet" href="/css/style.css"> </head>
+    <title>My Portfolio - 자기소개</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/folio.css}">
+</head>
 <body>
+    <!-- 헤더 포함 -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-    <div th:replace="~{fragments/header :: header}"></div>
-
-    <main class="container mt-5 pt-4">
-        <section id="profile-section" class="text-center my-5 py-5">
-            <img id="profile-image" src="/img/profile-default.jpg" alt="프로필 사진" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-            
-            <h1 id="profile-name" class="display-4">이름을 불러오는 중...</h1>
-            
-            <p id="profile-intro" class="lead text-muted">소개를 불러오는 중...</p>
-            
-            <div id="skills-container" class="mt-4">
+    <main class="folio-wrap container">
+        <!-- 기본 정보 섹션 -->
+        <section class="folio-card">
+            <div class="folio-header">
+                <img id="profile-image" 
+                     th:src="${folio.profileImg != null and folio.profileImg != '' ? folio.profileImg : '/img/profile-default.jpg'}" 
+                     alt="프로필 사진" 
+                     class="profile-img">
+                
+                <h1 id="profile-name" class="folio-name" th:text="${folio.name}">개발자</h1>
+                
+                <p id="profile-intro" class="folio-bio" th:text="${folio.bio}">안녕하세요! 개발자입니다.</p>
+                
+                <!-- 기술 스택 -->
+                <div class="folio-skills-section">
+                    <h2 class="folio-skill-title">Skills</h2>
+                    <div class="folio-skills" th:if="${folio.skills}">
+                        <span class="skill-tag" th:each="skill : ${#strings.listSplit(folio.skills, ',')}" 
+                              th:text="${#strings.trim(skill)}">Java</span>
+                    </div>
                 </div>
+            </div>
         </section>
 
-        <hr>
-
-        <section id="projects-section" class="my-5 py-5">
-            <h2 class="text-center mb-5">Projects</h2>
-            <div id="projects-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- 학력 섹션 -->
+        <section class="folio-section" th:if="${folio.educations != null and !folio.educations.isEmpty()}">
+            <h2>Education</h2>
+            <div class="timeline">
+                <div class="timeline-item" th:each="edu : ${folio.educations}">
+                    <div class="timeline-content">
+                        <span class="timeline-period" th:text="${edu.period}">2020.03 - 2024.02</span>
+                        <h3 class="timeline-title" th:text="${edu.title}">대학교명</h3>
+                        <p class="timeline-subtitle" th:text="${edu.subtitle}">전공명</p>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- 경력 섹션 -->
+        <section class="folio-section" th:if="${folio.careers != null and !folio.careers.isEmpty()}">
+            <h2>Career</h2>
+            <div class="timeline">
+                <div class="timeline-item" th:each="career : ${folio.careers}">
+                    <div class="timeline-content">
+                        <span class="timeline-period" th:text="${career.period}">2022.01 - 현재</span>
+                        <h3 class="timeline-title" th:text="${career.title}">회사명</h3>
+                        <p class="timeline-subtitle" th:text="${career.subtitle}">직책</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 프로젝트 섹션 -->
+        <section id="projects-section" class="folio-section">
+            <h2>Recent Projects</h2>
+            <div id="projects-grid" class="projects-grid">
+                <!-- JavaScript로 동적 로드 -->
+            </div>
         </section>
     </main>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <!-- 푸터 포함 -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="/js/folio.js"></script>
-
+    <script th:src="@{/js/folio.js}"></script>
 </body>
 </html>

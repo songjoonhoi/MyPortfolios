@@ -1,71 +1,250 @@
+/* folio.css - 자기소개 페이지 전용 스타일 */
+
 .folio-wrap {
-  margin: 3rem auto;
-  max-width: 800px;
-  text-align: center;
+  margin: 2rem auto;
+  max-width: 900px;
+  padding: 0 20px;
 }
 
 .folio-card {
   background: #fff;
   border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
 }
 
 .folio-header {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .profile-img {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid #eee;
+  margin-bottom: 1.5rem;
+  border: 4px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .folio-name {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
+  font-weight: 700;
   margin-bottom: 1rem;
+  color: #1a202c;
 }
 
 .folio-bio {
-  font-size: 1.1rem;
-  color: #555;
+  font-size: 1.2rem;
+  color: #4a5568;
   margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.folio-skills-section {
+  width: 100%;
 }
 
 .folio-skill-title {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
 }
 
 .folio-skills {
-  list-style: none;
-  padding: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .skill-tag {
-  background: #f3f4f6;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.95rem;
-  color: #333;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card-link {
-    text-decoration: none; /* 링크 밑줄 제거 */
-    color: inherit; /* 카드 텍스트 색상을 부모 요소와 동일하게 설정 */
+.skill-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.card-link .card:hover {
-    transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 위로 이동하는 효과 */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-    transition: all 0.2s ease-in-out;
+/* 섹션 스타일 */
+.folio-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.folio-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1a202c;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.folio-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+/* 타임라인 스타일 */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  background: #667eea;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.timeline-content {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #667eea;
+}
+
+.timeline-period {
+  font-size: 0.9rem;
+  color: #667eea;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.timeline-subtitle {
+  font-size: 1rem;
+  color: #4a5568;
+  margin: 0;
+}
+
+/* 프로젝트 그리드 */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.project-card-body {
+  padding: 1.5rem;
+}
+
+.project-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .folio-wrap {
+    padding: 0 1rem;
+  }
+  
+  .folio-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .profile-img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .folio-name {
+    font-size: 1.8rem;
+  }
+  
+  .folio-bio {
+    font-size: 1.1rem;
+  }
+  
+  .timeline {
+    padding-left: 1.5rem;
+  }
+  
+  .timeline-item::before {
+    left: -1.5rem;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
 }

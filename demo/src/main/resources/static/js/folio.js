@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function loadFolioInfo() {
-    // [수정된 부분 1] URL을 '/api/folios/1'로 변경
+    // ✅ 수정: URL을 '/api/folios/1'로 고정
     fetch('/api/folios/1')
         .then(response => {
             if (!response.ok) {
@@ -16,19 +16,23 @@ function loadFolioInfo() {
         })
         .then(data => {
             if (data) {
-                // (이하 내용은 동일)
+                // ✅ 수정: profileImg 필드명 변경 (photo → profileImg)
                 const profileImage = document.getElementById('profile-image');
-                if (profileImage && data.photo) {
-                    profileImage.src = data.photo;
+                if (profileImage && data.profileImg) {
+                    profileImage.src = data.profileImg;
                 }
+                
                 const profileName = document.getElementById('profile-name');
                 if (profileName) {
                     profileName.textContent = data.name || '이름';
                 }
+                
+                // ✅ 수정: bio 필드명 변경 (intro → bio)
                 const profileIntro = document.getElementById('profile-intro');
                 if (profileIntro) {
-                    profileIntro.textContent = data.intro || '한 줄 소개';
+                    profileIntro.textContent = data.bio || '한 줄 소개';
                 }
+                
                 const skillsContainer = document.getElementById('skills-container');
                 if (skillsContainer && data.skills) {
                     const skillsArray = data.skills.split(',').map(skill => skill.trim());
@@ -46,14 +50,13 @@ function loadFolioInfo() {
 }
 
 function loadProjects() {
-    fetch('/api/portfolios')
+    fetch('/api/portfolios?page=0&size=6&sort=latest') // 최신 6개만 가져오기
         .then(response => {
             if (!response.ok) {
                 throw new Error(`서버 응답 오류: ${response.status}`);
             }
             return response.json();
         })
-        // [수정된 부분 2] pageObject에서 실제 데이터 배열인 .content를 꺼내 사용
         .then(pageObject => {
             const projectsGrid = document.getElementById('projects-grid');
             if (projectsGrid) {
@@ -62,25 +65,35 @@ function loadProjects() {
                 // 실제 프로젝트 배열은 pageObject.content 안에 있습니다.
                 const projects = pageObject.content; 
 
-                projects.forEach(project => {
-                    const colDiv = document.createElement('div');
-                    colDiv.className = 'col';
+                if (projects.length === 0) {
+                    projectsGrid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">등록된 프로젝트가 없습니다.</p>';
+                    return;
+                }
 
-                    colDiv.innerHTML = `
-                        <a href="/detail/${project.id}" class="card-link">
-                            <div class="card h-100">
-                                <img src="${project.thumbnail}" class="card-img-top" alt="${project.title} 썸네일">
-                                <div class="card-body">
-                                    <h5 class="card-title">${project.title}</h5>
-                                </div>
-                            </div>
-                        </a>
+                projects.forEach(project => {
+                    const projectCard = document.createElement('a');
+                    projectCard.href = `/projects/${project.id}`;
+                    projectCard.className = 'project-card';
+
+                    // 기본 이미지 처리
+                    const imageUrl = project.coverUrl || '/img/profile-default.jpg';
+
+                    projectCard.innerHTML = `
+                        <img src="${imageUrl}" alt="${project.title} 썸네일" loading="lazy">
+                        <div class="project-card-body">
+                            <h3 class="project-card-title">${project.title}</h3>
+                        </div>
                     `;
-                    projectsGrid.appendChild(colDiv);
+                    
+                    projectsGrid.appendChild(projectCard);
                 });
             }
         })
         .catch(error => {
             console.error('프로젝트 목록을 불러오는 중 에러가 발생했습니다:', error);
+            const projectsGrid = document.getElementById('projects-grid');
+            if (projectsGrid) {
+                projectsGrid.innerHTML = '<p style="text-align: center; color: #e53e3e; grid-column: 1/-1;">프로젝트를 불러오는데 실패했습니다.</p>';
+            }
         });
 }
