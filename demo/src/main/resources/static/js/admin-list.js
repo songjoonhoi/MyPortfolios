@@ -74,12 +74,13 @@ function showEmpty() {
  */
 function createAdminCard(project) {
   const el = document.createElement("article");
-  el.className = "card admin-project-card"; // 새 CSS 클래스 적용
+  el.className = "card admin-project-card";
+
+  // [핵심 수정] 삭제 후 즉시 DOM에서 제거할 수 있도록 카드에 data-id 속성을 추가합니다.
+  el.dataset.id = project.id; 
 
   const formattedDate = new Date(project.createdAt).toLocaleDateString('ko-KR');
-  // 태그는 최대 2개까지만 표시
   const tagsHtml = (project.tags || []).slice(0, 2).map(tag => `<span class="tag">${tag}</span>`).join("");
-  // 대표 이미지가 있으면 썸네일로, 없으면 기본 아이콘 표시
   const mediaHtml = project.coverUrl
     ? `<img src="${project.coverUrl}" alt="${project.title}" class="card-thumbnail">`
     : `<span class="file-icon">📄</span>`;
@@ -101,7 +102,6 @@ function createAdminCard(project) {
     </div>
   `;
 
-  // 삭제 버튼 이벤트 리스너 연결
   el.querySelector(".btn-delete").addEventListener("click", () => handleDelete(project.id, project.title));
 
   return el;

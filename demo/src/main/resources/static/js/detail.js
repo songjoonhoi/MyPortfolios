@@ -11,8 +11,7 @@ const state = {
  * 페이지 로드 시 실행되는 메인 초기화 함수
  */
 document.addEventListener("DOMContentLoaded", async () => {
-  // URL에서 프로젝트 ID를 추출합니다.
-  const projectId = location.pathname.split("/").pop();
+  // [수정] URL에서 ID를 추출하는 대신, HTML에 주입된 변수를 사용합니다.
   if (!projectId) {
     document.body.innerHTML = "<h1>잘못된 접근입니다.</h1>";
     return;
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector('main').innerHTML = `<p class="note error">프로젝트 정보를 불러올 수 없습니다.</p>`;
   }
 });
-
 /**
  * 특정 ID의 프로젝트 데이터를 API로 요청하는 함수
  * @param {string} id - 프로젝트 ID

@@ -88,9 +88,16 @@ public class ApiController {
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         try {
             projectService.deleteProject(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // 성공 시 204
+        } catch (RuntimeException e) {
+            // RuntimeException (e.g., ID를 못찾는 경우)이 발생하면 로그를 남기고 404를 반환합니다.
+            System.err.println("프로젝트 삭제 실패 (ID: " + id + "): " + e.getMessage());
+            return ResponseEntity.notFound().build(); // 실패 시 404
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            // 그 외 다른 모든 예외(파일 I/O 등)가 발생하면, 전체 오류 내용을 로그에 출력하고 500 서버 에러를 반환합니다.
+            System.err.println("프로젝트 삭제 중 서버 오류 발생 (ID: " + id + ")");
+            e.printStackTrace(); // <-- 진짜 원인을 보여줄 가장 중요한 부분!
+            return ResponseEntity.internalServerError().build(); // 실패 시 500
         }
     }
 
