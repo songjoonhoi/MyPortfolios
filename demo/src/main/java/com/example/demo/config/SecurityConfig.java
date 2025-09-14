@@ -2,7 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // HttpMethod를 사용하기 위해 import 합니다.
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -36,13 +36,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                // ▼▼▼ [수정된 핵심 부분] ▼▼▼
+                // ▼▼▼ [수정된 핵심 부분] - 일반 사용자가 볼 수 있는 페이지 확대 ▼▼▼
                 // 모든 사용자가 볼 수 있는 페이지와 리소스는 전부 허용 (permitAll)
-                .requestMatchers("/", "/folio/**", "/detail/**", "/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
+                .requestMatchers("/", "/projects/**", "/folio/**", "/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
                 // 데이터를 조회(GET)하는 API는 전부 허용
-                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/portfolios/**", "/api/folios/**").permitAll()
                 // 관리자 페이지는 'ADMIN' 역할이 반드시 필요
-                .requestMatchers("/admin/**", "/h2-console/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/admin-list", "/h2-console/**").hasRole("ADMIN")
                 // 위에서 지정한 규칙 외의 모든 요청은 로그인해야만 가능
                 .anyRequest().authenticated()
             )

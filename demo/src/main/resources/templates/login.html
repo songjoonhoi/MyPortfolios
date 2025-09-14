@@ -12,6 +12,10 @@
     <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
     <link rel="stylesheet" th:href="@{/css/components/forms.css}">
     
+    <!-- 레이아웃 -->
+    <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+    
     <style>
         .login-container { 
             max-width: 400px; 
@@ -50,9 +54,24 @@
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
+        .back-to-home {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+        .back-to-home a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            transition: color var(--transition-fast);
+        }
+        .back-to-home a:hover {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+
     <main class="login-container">
         <h1>로그인</h1>
         <form th:action="@{/login}" method="post">
@@ -68,6 +87,12 @@
                 사용자 이름 또는 비밀번호가 올바르지 않습니다.
             </div>
         </form>
+        
+        <div class="back-to-home">
+            <a th:href="@{/}">← 메인 페이지로 돌아가기</a>
+        </div>
     </main>
+
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

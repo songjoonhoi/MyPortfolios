@@ -6,12 +6,22 @@
     </a>
     <nav class="nav">
       <ul id="primary-menu" class="nav-list">
-        <li><a th:href="@{/}" class="is-active">포트폴리오</a></li>
-        <li><a th:href="@{/folio/1}">자기소개</a></li>
-        <li><a th:href="@{/login}">로그인</a></li>
-        <li><a th:href="@{/admin}">관리자</a></li>
-        <li><a th:href="@{/admin-list}">리스트관리</a></li>
-        <li><a th:href="@{/admin/folio}">자기소개관리</a></li> 
+        <!-- 일반 사용자용 메뉴 (로그인하지 않은 경우) -->
+        <th:block sec:authorize="!isAuthenticated()">
+          <li><a th:href="@{/}">포트폴리오</a></li>
+          <li><a th:href="@{/folio/1}">자기소개</a></li>
+          <li><a th:href="@{/login}">로그인</a></li>
+        </th:block>
+        
+        <!-- 관리자용 메뉴 (로그인한 경우) -->
+        <th:block sec:authorize="isAuthenticated()">
+          <li><a th:href="@{/}">포트폴리오</a></li>
+          <li><a th:href="@{/folio/1}">자기소개</a></li>
+          <li><a th:href="@{/admin}">포트폴리오 등록</a></li>
+          <li><a th:href="@{/admin-list}">리스트관리</a></li>
+          <li><a th:href="@{/admin/folio}">자기소개관리</a></li>
+          <li><a th:href="@{/logout}" onclick="return confirm('로그아웃 하시겠습니까?')">로그아웃</a></li>
+        </th:block>
       </ul>
     </nav>
   </div>

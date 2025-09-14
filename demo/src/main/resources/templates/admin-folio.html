@@ -22,13 +22,13 @@
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <main class="admin-container">
+  <main class="admin-folio-container">
     <h1>자기소개 수정</h1>
 
     <section class="section">
       <h2>기본 정보</h2>
       <form id="folioForm">
-        <input type="hidden" id="folioId" value="1" />
+        <input type="hidden" id="folioId" name="folioId" value="1" />
         
         <label for="name">이름</label>
         <input type="text" id="name" name="name" required />
@@ -40,41 +40,41 @@
         <input type="text" id="skills" name="skills" placeholder="예: Java, Spring Boot, AWS" />
 
         <label for="profileFile">프로필 이미지</label>
-        <input type="file" id="profileFile" accept="image/*" />
-        <img id="preview" class="preview-img" style="display:none;" />
+        <input type="file" id="profileFile" name="profileFile" accept="image/*" />
+        <img id="preview" class="preview-img" style="display:none;" alt="프로필 미리보기" />
       </form>
     </section>
 
     <hr />
 
     <section class="section">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>학력</h2>
+      <div class="dynamic-section-header">
+        <h2 class="dynamic-section-title">학력</h2>
         <button id="addEducationBtn" type="button" class="btn-add">학력 추가</button>
       </div>
-      <div id="educationsContainer">
+      <div id="educationsContainer" class="dynamic-container">
       </div>
     </section>
 
     <hr />
 
     <section class="section">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>경력</h2>
+      <div class="dynamic-section-header">
+        <h2 class="dynamic-section-title">경력</h2>
         <button id="addCareerBtn" type="button" class="btn-add">경력 추가</button>
       </div>
-      <div id="careersContainer">
+      <div id="careersContainer" class="dynamic-container">
       </div>
     </section>
 
     <hr />
 
     <section class="section">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>전문 분야</h2>
+      <div class="dynamic-section-header">
+        <h2 class="dynamic-section-title">전문 분야</h2>
         <button id="addExpertiseBtn" type="button" class="btn-add">전문분야 추가</button>
       </div>
-      <div id="expertisesContainer">
+      <div id="expertisesContainer" class="dynamic-container">
       </div>
     </section>
 

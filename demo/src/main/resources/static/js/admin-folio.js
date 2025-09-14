@@ -6,7 +6,7 @@ const $ = (sel, ctx = document) => ctx.querySelector(sel);
 let uploadedProfileUrl = "";
 let educations = [];
 let careers = [];
-let expertises = []; // ▼▼▼ 새로 추가 ▼▼▼
+let expertises = [];
 
 // 자기소개 ID는 1로 고정
 const folioId = 1;
@@ -34,12 +34,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 기존 데이터로 폼 렌더링
     educations = folio.educations || [];
     careers = folio.careers || [];
-    expertises = folio.expertises || []; // ▼▼▼ 새로 추가 ▼▼▼
+    expertises = folio.expertises || [];
     
     // 빈 데이터일 때 플레이스홀더 폼 추가
     if (educations.length === 0) addPlaceholderEducation();
     if (careers.length === 0) addPlaceholderCareer();
-    if (expertises.length === 0) addPlaceholderExpertise(); // ▼▼▼ 새로 추가 ▼▼▼
+    if (expertises.length === 0) addPlaceholderExpertise();
     
     renderLists();
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 오류 발생 시 빈 폼들 추가
     addPlaceholderEducation();
     addPlaceholderCareer();
-    addPlaceholderExpertise(); // ▼▼▼ 새로 추가 ▼▼▼
+    addPlaceholderExpertise();
     renderLists();
   }
 });
@@ -68,7 +68,7 @@ function addPlaceholderCareer() {
 }
 
 /**
- * ▼▼▼ 새로 추가: 빈 전문분야 폼 추가 ▼▼▼
+ * 빈 전문분야 폼 추가
  */
 function addPlaceholderExpertise() {
   expertises.push({ description: '' });
@@ -80,11 +80,11 @@ function addPlaceholderExpertise() {
 function renderLists() {
   const eduContainer = $("#educationsContainer");
   const carContainer = $("#careersContainer");
-  const expContainer = $("#expertisesContainer"); // ▼▼▼ 새로 추가 ▼▼▼
+  const expContainer = $("#expertisesContainer");
   
   eduContainer.innerHTML = '';
   carContainer.innerHTML = '';
-  expContainer.innerHTML = ''; // ▼▼▼ 새로 추가 ▼▼▼
+  expContainer.innerHTML = '';
 
   educations.forEach((edu, index) => {
     eduContainer.appendChild(createItemForm('education', edu, index));
@@ -94,7 +94,6 @@ function renderLists() {
     carContainer.appendChild(createItemForm('career', car, index));
   });
 
-  // ▼▼▼ 새로 추가: 전문분야 렌더링 ▼▼▼
   expertises.forEach((exp, index) => {
     expContainer.appendChild(createItemForm('expertise', exp, index));
   });
@@ -110,11 +109,12 @@ function createItemForm(type, item, index) {
   const container = document.createElement("div");
   container.className = "detail-card";
   
-  // ▼▼▼ 수정: expertise 케이스 추가 ▼▼▼
   if (type === 'expertise') {
+    const inputId = `expertise-${index}`;
+    
     container.innerHTML = `
-      <label>전문 분야</label>
-      <input type="text" class="item-description" value="${item.description || ''}" 
+      <label for="${inputId}">전문 분야</label>
+      <input type="text" id="${inputId}" name="${inputId}" class="item-description" value="${item.description || ''}" 
              placeholder="예: AI 기반 시스템 설계 및 개발">
       <button type="button" class="btn-remove">삭제</button>
     `;
@@ -149,16 +149,19 @@ function createItemForm(type, item, index) {
     };
     
     const ph = placeholders[type];
+    const periodId = `${type}-period-${index}`;
+    const titleId = `${type}-title-${index}`;
+    const subtitleId = `${type}-subtitle-${index}`;
     
     container.innerHTML = `
-      <label>기간</label>
-      <input type="text" class="item-period" value="${item.period || ''}" 
+      <label for="${periodId}">기간</label>
+      <input type="text" id="${periodId}" name="${periodId}" class="item-period" value="${item.period || ''}" 
              placeholder="${ph.period}">
-      <label>${type === 'education' ? '학교명' : '회사명'}</label>
-      <input type="text" class="item-title" value="${item.title || ''}" 
+      <label for="${titleId}">${type === 'education' ? '학교명' : '회사명'}</label>
+      <input type="text" id="${titleId}" name="${titleId}" class="item-title" value="${item.title || ''}" 
              placeholder="${ph.title}">
-      <label>${type === 'education' ? '전공 및 학위' : '직책'}</label>
-      <input type="text" class="item-subtitle" value="${item.subtitle || ''}" 
+      <label for="${subtitleId}">${type === 'education' ? '전공 및 학위' : '직책'}</label>
+      <input type="text" id="${subtitleId}" name="${subtitleId}" class="item-subtitle" value="${item.subtitle || ''}" 
              placeholder="${ph.subtitle}">
       <button type="button" class="btn-remove">삭제</button>
     `;
@@ -206,13 +209,13 @@ $("#addCareerBtn")?.addEventListener("click", () => {
   renderLists();
 });
 
-// ▼▼▼ 새로 추가: '전문분야 추가' 버튼 이벤트 ▼▼▼
+// '전문분야 추가' 버튼 이벤트
 $("#addExpertiseBtn")?.addEventListener("click", () => {
   expertises.push({description: ''});
   renderLists();
 });
 
-// 프로필 이미지 업로드 이벤트 (기존과 동일)
+// 프로필 이미지 업로드 이벤트
 $("#profileFile")?.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -285,7 +288,6 @@ $("#submitBtn")?.addEventListener("click", async () => {
     return;
   }
 
-  // ▼▼▼ 수정: expertises 포함 ▼▼▼
   const folioDto = {
     id: folioId,
     name: name,
@@ -294,7 +296,7 @@ $("#submitBtn")?.addEventListener("click", async () => {
     profileImg: uploadedProfileUrl || '',
     educations: educations.filter(edu => edu.period?.trim() || edu.title?.trim() || edu.subtitle?.trim()),
     careers: careers.filter(car => car.period?.trim() || car.title?.trim() || car.subtitle?.trim()),
-    expertises: expertises.filter(exp => exp.description?.trim()) // ▼▼▼ 새로 추가 ▼▼▼
+    expertises: expertises.filter(exp => exp.description?.trim())
   };
 
   try {
