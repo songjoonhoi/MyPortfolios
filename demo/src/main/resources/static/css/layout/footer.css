@@ -1,0 +1,78 @@
+/* layout/footer.css - 푸터 레이아웃 */
+
+.site-footer {
+  margin-top: var(--spacing-3xl);
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text);
+  font-weight: var(--font-weight-medium);
+}
+
+.footer-brand-mark {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(45deg, var(--primary), var(--primary-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-lg);
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.footer-copyright {
+  color: var(--text-light);
+  font-size: var(--font-size-xs);
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-lg);
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+}

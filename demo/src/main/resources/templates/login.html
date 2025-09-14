@@ -3,14 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    
+    <!-- 기본 스타일 -->
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    
+    <!-- 컴포넌트 -->
+    <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+    
     <style>
-        .login-container { max-width: 400px; margin-top: 5rem; }
-        .error-message { color: #dc3545; margin-top: 1rem; text-align: center; }
+        .login-container { 
+            max-width: 400px; 
+            margin: var(--spacing-3xl) auto;
+            padding: var(--spacing-xl);
+            background: var(--card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text);
+        }
+        .error-message { 
+            color: var(--danger); 
+            margin-top: var(--spacing-md); 
+            text-align: center; 
+            font-size: var(--font-size-sm);
+        }
+        .login-btn {
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--spacing-lg);
+            transition: all var(--transition-fast);
+        }
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
     </style>
 </head>
 <body>
-    <main class="admin-container login-container">
+    <main class="login-container">
         <h1>로그인</h1>
         <form th:action="@{/login}" method="post">
             <label for="username">ID</label>
@@ -19,7 +62,7 @@
             <label for="password">PASSWORD</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit" class="btn-submit" style="margin-top: 1.5rem;">로그인</button>
+            <button type="submit" class="login-btn">로그인</button>
 
             <div th:if="${param.error}" class="error-message">
                 사용자 이름 또는 비밀번호가 올바르지 않습니다.

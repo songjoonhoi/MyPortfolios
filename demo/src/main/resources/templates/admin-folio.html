@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>관리자 - 자기소개 수정</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  
+  <!-- 기본 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/variables.css}">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  
+  <!-- 컴포넌트 -->
+  <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+  <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+  
+  <!-- 레이아웃 -->
+  <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+  
+  <!-- 페이지별 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/pages/admin-folio.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
@@ -16,6 +29,7 @@
       <h2>기본 정보</h2>
       <form id="folioForm">
         <input type="hidden" id="folioId" value="1" />
+        
         <label for="name">이름</label>
         <input type="text" id="name" name="name" required />
 
@@ -36,7 +50,7 @@
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>학력</h2>
-        <button id="addEducationBtn" type="button" class="btn-add">+ 학력 추가</button>
+        <button id="addEducationBtn" type="button" class="btn-add">학력 추가</button>
       </div>
       <div id="educationsContainer">
       </div>
@@ -47,7 +61,7 @@
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>경력</h2>
-        <button id="addCareerBtn" type="button" class="btn-add">+ 경력 추가</button>
+        <button id="addCareerBtn" type="button" class="btn-add">경력 추가</button>
       </div>
       <div id="careersContainer">
       </div>
@@ -55,11 +69,10 @@
 
     <hr />
 
-    <!-- ▼▼▼ 새로 추가: 전문분야 섹션 ▼▼▼ -->
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>전문 분야</h2>
-        <button id="addExpertiseBtn" type="button" class="btn-add">+ 전문분야 추가</button>
+        <button id="addExpertiseBtn" type="button" class="btn-add">전문분야 추가</button>
       </div>
       <div id="expertisesContainer">
       </div>

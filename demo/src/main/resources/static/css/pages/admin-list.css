@@ -1,0 +1,137 @@
+/* pages/admin-list.css - 관리자 목록 페이지 전용 스타일 */
+
+/* ===== 관리자 목록 컨테이너 ===== */
+.admin-list-container {
+  max-width: 1200px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-xl);
+}
+
+.admin-list-container h1 {
+  color: var(--text);
+  margin-bottom: var(--spacing-xl);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  padding-left: var(--spacing-sm);
+}
+
+/* ===== 그리드 레이아웃 ===== */
+#adminList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* ===== 액션 버튼 스타일 ===== */
+.action-btn {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  font-family: inherit;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.action-btn:hover::before {
+  left: 100%;
+}
+
+.btn-edit {
+  background: var(--success);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-edit:hover {
+  background: var(--success-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-delete {
+  background: var(--danger);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-delete:hover {
+  background: var(--danger-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== 로딩 및 상태 ===== */
+.loading-container {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--spacing-3xl);
+  color: var(--text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--spacing-xl);
+  background: #fef2f2;
+  color: var(--danger-dark);
+  border-radius: var(--radius-lg);
+  border: 1px solid #fecaca;
+}
+
+/* ===== 반응형 디자인 ===== */
+@media (max-width: 768px) {
+  .admin-list-container {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  #adminList {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+  }
+  
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-list-container {
+    padding: var(--spacing-md);
+    margin: var(--spacing-md);
+  }
+  
+  .admin-list-container h1 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  #adminList {
+    grid-template-columns: 1fr;
+  }
+}

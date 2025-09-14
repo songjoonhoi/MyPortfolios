@@ -1,17 +1,18 @@
-/* folio.css - 우리 사이트와 어울리는 자기소개 페이지 */
+/* pages/folio.css - 자기소개 페이지 전용 스타일 */
 
 .folio-page {
-  background: #f8fafc;
+  background: var(--bg-soft);
   min-height: 100vh;
 }
 
+/* ===== 메인 컨테이너 ===== */
 .folio-container {
   max-width: 1200px;
-  margin: 2rem auto;
-  background: white;
-  border-radius: 20px;
+  margin: var(--spacing-xl) auto;
+  background: var(--card);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-xl);
   display: grid;
   grid-template-columns: 40% 60%;
   min-height: 80vh;
@@ -19,16 +20,16 @@
 
 /* ===== 왼쪽 프로필 섹션 ===== */
 .profile-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem 2rem;
+  padding: var(--spacing-2xl);
   overflow: hidden;
 }
 
-/* 기하학적 배경 패턴 */
+/* ===== 기하학적 배경 패턴 ===== */
 .geometric-bg {
   position: absolute;
   top: 0;
@@ -41,7 +42,7 @@
 .shape {
   position: absolute;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
 }
 
 .shape-1 {
@@ -71,7 +72,7 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* 프로필 컨텐츠 */
+/* ===== 프로필 컨텐츠 ===== */
 .profile-content {
   position: relative;
   z-index: 10;
@@ -81,7 +82,7 @@
 }
 
 .profile-avatar {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   position: relative;
 }
 
@@ -91,37 +92,50 @@
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
+  transition: opacity var(--transition-normal);
+}
+
+.avatar-image:not([src]), 
+.avatar-image[src=""] {
+  opacity: 0.3;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
 }
 
 .profile-name {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin: 0 0 1.5rem 0;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--spacing-lg) 0;
   line-height: 1.2;
 }
 
 .contact-info {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .contact-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
   opacity: 0.9;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.contact-item:hover {
+  opacity: 0.8;
 }
 
 .contact-icon {
   width: 20px;
-  margin-right: 12px;
-  font-size: 14px;
+  margin-right: var(--spacing-sm);
+  font-size: var(--font-size-sm);
 }
 
 .profile-bio {
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   line-height: 1.6;
   opacity: 0.95;
   margin: 0;
@@ -129,15 +143,15 @@
 
 /* ===== 오른쪽 정보 섹션 ===== */
 .info-section {
-  padding: 3rem;
+  padding: var(--spacing-2xl);
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: var(--spacing-xl);
 }
 
 .info-block {
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--spacing-xl);
 }
 
 .info-block:last-child {
@@ -146,10 +160,10 @@
 }
 
 .block-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1a202c;
-  margin: 0 0 1.5rem 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--text);
+  margin: 0 0 var(--spacing-lg) 0;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -157,21 +171,21 @@
 .block-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
 }
 
-/* 정보 아이템 */
+/* ===== 정보 아이템 ===== */
 .info-item {
   display: grid;
   grid-template-columns: 140px 1fr;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
   align-items: start;
 }
 
 .item-period {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #365cff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary);
   padding-top: 2px;
 }
 
@@ -180,74 +194,80 @@
 }
 
 .item-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a202c;
-  margin: 0 0 0.5rem 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  margin: 0 0 var(--spacing-xs) 0;
   line-height: 1.3;
 }
 
 .item-subtitle {
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
   margin: 0;
   line-height: 1.4;
 }
 
-/* Expertise 텍스트 */
+/* ===== 전문분야 텍스트 ===== */
 .expertise-text {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .expertise-text p {
-  font-size: 0.95rem;
-  color: #4a5568;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
   margin: 0;
   line-height: 1.5;
   position: relative;
-  padding-left: 1rem;
+  padding-left: var(--spacing-md);
 }
 
 .expertise-text p::before {
   content: '•';
   position: absolute;
   left: 0;
-  color: #365cff;
-  font-weight: bold;
+  color: var(--primary);
+  font-weight: var(--font-weight-bold);
 }
 
-/* Skills 리스트 */
+/* ===== 스킬 리스트 ===== */
 .skills-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--spacing-sm);
 }
 
 .skill-item {
-  background: #365cff;
+  background: var(--primary);
   color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
+}
+
+.skill-item:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-md);
 }
 
 /* ===== 반응형 디자인 ===== */
 @media (max-width: 1024px) {
   .folio-container {
     grid-template-columns: 1fr;
-    margin: 1rem;
+    margin: var(--spacing-md);
   }
   
   .profile-section {
     min-height: 50vh;
-    padding: 2.5rem 2rem;
+    padding: var(--spacing-xl);
   }
   
   .info-section {
-    padding: 2.5rem 2rem;
+    padding: var(--spacing-xl);
   }
 }
 
@@ -258,7 +278,7 @@
   }
   
   .profile-section {
-    padding: 2rem 1.5rem;
+    padding: var(--spacing-lg);
   }
   
   .avatar-image {
@@ -267,27 +287,27 @@
   }
   
   .profile-name {
-    font-size: 1.8rem;
+    font-size: var(--font-size-2xl);
   }
   
   .info-section {
-    padding: 2rem 1.5rem;
-    gap: 2rem;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-lg);
   }
   
   .info-item {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
   }
   
   .item-period {
-    font-size: 0.8rem;
+    font-size: var(--font-size-xs);
   }
 }
 
 @media (max-width: 480px) {
   .profile-section {
-    padding: 1.5rem 1rem;
+    padding: var(--spacing-md);
   }
   
   .avatar-image {
@@ -296,39 +316,18 @@
   }
   
   .profile-name {
-    font-size: 1.5rem;
+    font-size: var(--font-size-xl);
   }
   
   .contact-item {
-    font-size: 0.8rem;
+    font-size: var(--font-size-xs);
   }
   
   .info-section {
-    padding: 1.5rem 1rem;
+    padding: var(--spacing-md);
   }
   
   .block-title {
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
   }
-}
-
-/* folio.css에 추가 */
-.avatar-image {
-    transition: opacity 0.3s ease;
-}
-
-.avatar-image:not([src]), 
-.avatar-image[src=""] {
-    opacity: 0.3;
-    background: linear-gradient(135deg, #365cff, #5b8cff);
-}
-
-.avatar-image.loading::after {
-    content: "로딩 중...";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 14px;
 }

@@ -1,0 +1,188 @@
+/* components/forms.css - 폼 컴포넌트 */
+
+/* ===== 폼 기본 레이아웃 ===== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* ===== 라벨 ===== */
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text);
+  margin-bottom: var(--spacing-xs);
+}
+
+label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text);
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+/* ===== 입력 필드 ===== */
+.form-input,
+.form-select,
+.form-textarea,
+input,
+select,
+textarea {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  background: var(--card);
+  color: var(--text);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(54, 92, 255, 0.1);
+}
+
+/* ===== 텍스트 영역 ===== */
+.form-textarea,
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ===== 파일 입력 ===== */
+.form-file {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.form-file input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.form-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.form-file:hover .form-file-label {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ===== 미리보기 이미지 ===== */
+.form-preview,
+.preview-img {
+  margin-top: var(--spacing-sm);
+  max-width: 200px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: none;
+  transition: all var(--transition-fast);
+}
+
+.form-preview.show,
+.preview-img[style*="block"] {
+  display: block;
+}
+
+.form-preview:hover,
+.preview-img:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== 도움말 텍스트 ===== */
+.form-help {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--spacing-xs);
+}
+
+/* ===== 동적 폼 요소 (관리자 페이지용) ===== */
+.detail-card {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-soft);
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  transition: all var(--transition-fast);
+}
+
+.detail-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.detail-card:last-child {
+  margin-bottom: 0;
+}
+
+.detail-card img {
+  max-width: 150px;
+  margin-top: var(--spacing-sm);
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+/* ===== 섹션 구분 ===== */
+.section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.section h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--border);
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+  .form-file-label {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .detail-card {
+    padding: var(--spacing-md);
+  }
+}

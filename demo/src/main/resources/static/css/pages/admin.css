@@ -1,0 +1,123 @@
+/* pages/admin.css - 관리자 페이지 전용 스타일 */
+
+/* ===== 관리자 컨테이너 ===== */
+.admin-container {
+  max-width: 720px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-xl);
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-container h1 {
+  color: var(--text);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ===== 섹션 구분 ===== */
+.admin-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.admin-section:last-child {
+  margin-bottom: 0;
+}
+
+.admin-section h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--border);
+}
+
+.admin-section-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin: -var(--spacing-sm) 0 var(--spacing-lg) 0;
+}
+
+/* ===== 섹션 헤더 (제목 + 버튼) ===== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-header h2 {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* ===== 동적 폼 컨테이너 ===== */
+.dynamic-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+#detailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* ===== 구분선 ===== */
+.admin-divider {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: var(--spacing-xl) 0;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: var(--spacing-xl) 0;
+}
+
+/* ===== 반응형 디자인 ===== */
+@media (max-width: 768px) {
+  .admin-container {
+    margin: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-lg);
+  }
+  
+  .admin-container h1 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .section-header .btn-add {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-container {
+    margin: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  
+  .admin-container h1 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .admin-section h2 {
+    font-size: var(--font-size-lg);
+  }
+}

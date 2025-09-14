@@ -2,26 +2,89 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>관리자 - 프로젝트 목록</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/admin-list.css}">
+  <title>관리자 - 프로젝트 등록/수정</title>
+  
+  <!-- 기본 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/variables.css}">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  
+  <!-- 컴포넌트 -->
+  <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+  <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+  
+  <!-- 레이아웃 -->
+  <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+  
+  <!-- 페이지별 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/pages/admin.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-  <main class="admin-list-container">
-    <h1>내 포트폴리오</h1>
-    <div id="adminList" class="grid">
-      <a href="/admin" class="card new-project-card" aria-label="새 포트폴리오 만들기">
-        <div class="new-project-card-inner">
-          <span class="plus-icon">+</span>
-          <span class="new-project-text">새 포트폴리오 만들기</span>
-        </div>
-      </a>
-      </div>
-    </main>
+  <main class="admin-container">
+    <h1 id="formTitle">프로젝트 등록</h1>
+
+    <section class="section">
+      <h2>기본 정보</h2>
+      <form id="projectForm">
+        <input type="hidden" id="projectId" />
+        
+        <label for="title">프로젝트 제목</label>
+        <input type="text" id="title" name="title" required />
+
+        <label for="creator">작성자</label>
+        <input type="text" id="creator" name="creator" required />
+
+        <label for="description">프로젝트 한 줄 요약</label>
+        <textarea id="description" name="description" required placeholder="목록 페이지에 보이는 간단한 요약을 입력해주세요."></textarea>
+        
+        <label for="link">외부 링크 (GitHub 등)</label>
+        <input type="url" id="link" name="link" placeholder="https://..." />
+
+        <label for="tags">태그 (쉼표로 구분)</label>
+        <input type="text" id="tags" name="tags" placeholder="예: Spring Boot, AWS, JPA" />
+
+        <label for="coverFile">대표 이미지</label>
+        <input type="file" id="coverFile" accept="image/*" />
+        <img id="preview" class="preview-img" style="display:none;" />
+      </form>
+    </section>
+
+    <hr />
+
+    <section class="section">
+      <h2>케이스 스터디</h2>
+      <p style="color: #666; margin-top: -0.5rem; margin-bottom: 1rem;">프로젝트의 상세 스토리를 구체적으로 작성해주세요.</p>
+
+      <label for="introduction">1. 도입 (Introduction)</label>
+      <textarea id="introduction" name="introduction" required placeholder="이 프로젝트를 왜 시작하게 되었는지 배경을 설명해주세요."></textarea>
+
+      <label for="problem">2. 문제 정의 (Problem)</label>
+      <textarea id="problem" name="problem" required placeholder="어떤 문제를 해결하고자 했나요?"></textarea>
+
+      <label for="roles">3. 역할 및 기여 (Roles & Contribution)</label>
+      <textarea id="roles" name="roles" required placeholder="이 프로젝트에서 어떤 역할을 맡았고, 구체적으로 어떤 부분을 개발했는지 설명해주세요. (마크다운 형식의 리스트도 사용 가능합니다)"></textarea>
+
+      <label for="result">4. 결과 및 회고 (Result & Review)</label>
+      <textarea id="result" name="result" required placeholder="프로젝트를 통해 무엇을 배웠나요? 어떤 성과가 있었고, 아쉬운 점이나 개선할 점은 무엇인가요?"></textarea>
+    </section>
+    
+    <hr />
+
+    <section class="section">
+      <h2>상세 갤러리</h2>
+      <div id="detailsContainer"></div>
+      <button id="addDetailBtn" type="button" class="btn-add">상세 추가</button>
+    </section>
+
+    <hr />
+
+    <button id="submitBtn" class="btn-submit">등록</button>
+  </main>
+
   <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
-  <script th:src="@{/js/admin-list.js}"></script>
+  <script th:src="@{/js/admin.js}"></script>
 </body>
 </html>

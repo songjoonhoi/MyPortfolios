@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>관리자 - 프로젝트 등록/수정</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  
+  <!-- 기본 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/variables.css}">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  
+  <!-- 컴포넌트 -->
+  <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+  <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+  
+  <!-- 레이아웃 -->
+  <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+  
+  <!-- 페이지별 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/pages/admin.css}">
 </head>
 <body>
   <th:block th:replace="~{fragments/header :: header}"></th:block>
@@ -25,6 +38,7 @@
 
         <label for="description">프로젝트 한 줄 요약</label>
         <textarea id="description" name="description" required placeholder="목록 페이지에 보이는 간단한 요약을 입력해주세요."></textarea>
+        
         <label for="link">외부 링크 (GitHub 등)</label>
         <input type="url" id="link" name="link" placeholder="https://..." />
 
@@ -55,12 +69,13 @@
       <label for="result">4. 결과 및 회고 (Result & Review)</label>
       <textarea id="result" name="result" required placeholder="프로젝트를 통해 무엇을 배웠나요? 어떤 성과가 있었고, 아쉬운 점이나 개선할 점은 무엇인가요?"></textarea>
     </section>
+    
     <hr />
 
     <section class="section">
       <h2>상세 갤러리</h2>
       <div id="detailsContainer"></div>
-      <button id="addDetailBtn" type="button" class="btn-add">+ 상세 추가</button>
+      <button id="addDetailBtn" type="button" class="btn-add">상세 추가</button>
     </section>
 
     <hr />

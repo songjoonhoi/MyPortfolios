@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>자기소개 - My Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/folio.css}">
-    <!-- Favicon 추가 -->
-    <link rel="icon" type="image/x-icon" th:href="@{/img/favicon.ico}">
+    
+    <!-- 기본 스타일 -->
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    
+    <!-- 레이아웃 -->
+    <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+    
+    <!-- 페이지별 스타일 -->
+    <link rel="stylesheet" th:href="@{/css/pages/folio.css}">
 </head>
 <body class="folio-page" data-page="folio">
 

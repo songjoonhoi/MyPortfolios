@@ -3,8 +3,20 @@
 <head>
   <meta charset="UTF-8"/>
   <title>My Portfolio - Detail</title>
-  <link rel="stylesheet" th:href="@{/css/main.css}"/>
-  <link rel="stylesheet" th:href="@{/css/detail.css}"/>
+  
+  <!-- 기본 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/variables.css}">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  
+  <!-- 컴포넌트 -->
+  <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+  
+  <!-- 레이아웃 -->
+  <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+  
+  <!-- 페이지별 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/pages/detail.css}">
 </head>
 <body data-page="detail">
 
@@ -19,8 +31,9 @@
       <a id="projectLink" href="#" target="_blank">프로젝트 링크</a>
     </div>
     <div id="projectTags" class="tech-cloud">
-      </div>
+    </div>
   </header>
+  
   <main class="case-study-container container">
     <section class="case-study-section">
       <h2 class="case-study-title">1. Introduction</h2>
@@ -42,6 +55,7 @@
       <div id="projectResult" class="case-study-content"></div>
     </section>
   </main>
+  
   <section class="container detail-gallery">
     <h3>프로젝트 갤러리</h3>
     <div id="galleryGrid"></div>

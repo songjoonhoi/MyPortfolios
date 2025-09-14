@@ -1,0 +1,125 @@
+/* layout/header.css - 헤더 레이아웃 */
+
+.site-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+}
+
+/* ===== 브랜드 로고 ===== */
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  transition: color var(--transition-fast);
+}
+
+.brand:hover {
+  color: var(--primary);
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(45deg, var(--primary), var(--primary-light));
+  border-radius: 50%;
+  margin-right: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.brand-text {
+  color: inherit;
+}
+
+/* ===== 네비게이션 ===== */
+.nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.nav-list a:hover {
+  color: var(--primary);
+  background: var(--primary-ink);
+  transform: translateY(-1px);
+}
+
+.nav-list a.is-active {
+  color: var(--primary);
+  background: var(--primary-ink);
+  font-weight: var(--font-weight-semibold);
+}
+
+.nav-list a.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 1px;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+  .header-inner {
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .brand {
+    font-size: var(--font-size-md);
+  }
+  
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .nav-list {
+    gap: var(--spacing-xs);
+  }
+  
+  .nav-list a {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .nav-list a.is-active::after {
+    display: none;
+  }
+}
